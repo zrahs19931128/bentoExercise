@@ -12,8 +12,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.config.HandleParamToMap;
 import com.example.demo.entitiy.BentoEntity;
+import com.example.demo.util.HandleParamToMap;
 
 @Service
 public class BentoService {

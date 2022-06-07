@@ -15,10 +15,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.config.AuthorEnum;
-import com.example.demo.config.CheckPassword;
-import com.example.demo.config.HandleParamToMap;
 import com.example.demo.entitiy.MemberEntity;
+import com.example.demo.util.AuthorEnum;
+import com.example.demo.util.CheckPassword;
+import com.example.demo.util.HandleParamToMap;
 
 @Service
 public class MemberService {

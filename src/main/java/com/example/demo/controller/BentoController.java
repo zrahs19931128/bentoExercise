@@ -14,8 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.config.HandleParamToMap;
 import com.example.demo.service.BentoService;
+import com.example.demo.util.HandleParamToMap;
 
 @Controller
 public class BentoController {

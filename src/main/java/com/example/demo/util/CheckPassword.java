@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;

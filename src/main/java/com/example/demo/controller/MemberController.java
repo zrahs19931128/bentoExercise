@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.config.CheckPassword;
-import com.example.demo.config.HandleParamToMap;
 import com.example.demo.service.MemberService;
+import com.example.demo.util.CheckPassword;
+import com.example.demo.util.HandleParamToMap;
 
 @Controller
 public class MemberController {
