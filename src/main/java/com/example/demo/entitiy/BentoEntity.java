@@ -2,79 +2,97 @@ package com.example.demo.entitiy;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+@Entity
+@Table(name = "bento_menu")
 public class BentoEntity {
 
-	private int menu_id;
+	@Id
+	@Column(name = "menu_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int menuId;
 	
-	private String product_name;
+	@Column(name = "product_name")
+	private String productName;
 	
-	private int price_name;
+	@Column(name = "price")
+	private int price;
 	
-	private int shelf_status;
+	@Column(name = "shelf_status")
+	private int shelfStatus;
 	
-	private int sell_day;
+	@Column(name = "sell_day")
+	private int sellDay;
 	
-	private int sell_person;
+	@Column(name = "sell_person")
+	private int sellPerson;
 	
+	@Column(name = "add_time")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date add_time;
+	private Date addTime;
 
 	public int getMenu_id() {
-		return menu_id;
+		return menuId;
 	}
 
-	public void setMenu_id(int menu_id) {
-		this.menu_id = menu_id;
+	public void setMenu_id(int menuId) {
+		this.menuId = menuId;
 	}
 
-	public String getProduct_name() {
-		return product_name;
+	public String getProductName() {
+		return productName;
 	}
 
-	public void setProduct_name(String product_name) {
-		this.product_name = product_name;
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 
-	public int getPrice_name() {
-		return price_name;
+	public int getPrice() {
+		return price;
 	}
 
-	public void setPrice_name(int price_name) {
-		this.price_name = price_name;
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
-	public int getShelf_status() {
-		return shelf_status;
+	public int getShelfStatus() {
+		return shelfStatus;
 	}
 
-	public void setShelf_status(int shelf_status) {
-		this.shelf_status = shelf_status;
+	public void setShelfStatus(int shelfStatus) {
+		this.shelfStatus = shelfStatus;
 	}
 
-	public int getSell_day() {
-		return sell_day;
+	public int getSellDay() {
+		return sellDay;
 	}
 
-	public void setSell_day(int sell_day) {
-		this.sell_day = sell_day;
+	public void setSellDay(int sellDay) {
+		this.sellDay = sellDay;
 	}
 
-	public int getSell_person() {
-		return sell_person;
+	public int getSellPerson() {
+		return sellPerson;
 	}
 
-	public void setSell_person(int sell_person) {
-		this.sell_person = sell_person;
+	public void setSellPerson(int sellPerson) {
+		this.sellPerson = sellPerson;
 	}
 
-	public Date getAdd_time() {
-		return add_time;
+	public Date getAddTime() {
+		return addTime;
 	}
 
-	public void setAdd_time(Date add_time) {
-		this.add_time = add_time;
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
 	}
 	
 }

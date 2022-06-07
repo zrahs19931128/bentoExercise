@@ -6,13 +6,19 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entitiy.BentoEntity;
+import com.example.demo.repository.BentoRepository;
 import com.example.demo.util.HandleParamToMap;
 
 @Service
@@ -23,6 +29,9 @@ public class BentoService {
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@Autowired
+	private BentoRepository bentoRepository;
 
 	@Autowired
 	private HandleParamToMap handleParam;
@@ -34,16 +43,19 @@ public class BentoService {
 		int page = Integer.parseInt(params.get("page").toString());
 		int pageSize = Integer.parseInt(params.get("rows").toString());
 
+		Pageable pageable = PageRequest.of(page-1, pageSize,Sort.Direction.DESC,"addTime");
+		Page<BentoEntity> pageList = bentoRepository.findAll(pageable);
+		
+		//將數據轉為List
+		List<BentoEntity> dataList = pageList.getContent();
+				
 		// 帳號總數
-		Integer total = jdbcTemplate.queryForObject("select count(*)from bento_menu", Integer.class);
-
-		List<BentoEntity> rows = jdbcTemplate.query("select * from bento_menu order by add_time desc limit ?,?",
-				new Object[] { (page - 1) * pageSize, pageSize },
-				new BeanPropertyRowMapper<BentoEntity>(BentoEntity.class));
+		Integer total = (int)pageList.getTotalElements();
+		
 		// 返回結果
 		Map<String, Object> resultMap = new HashMap();
 		resultMap.put("total", total);
-		resultMap.put("rows", rows);
+		resultMap.put("rows", dataList);
 
 		return resultMap;
 	}

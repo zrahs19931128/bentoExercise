@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-public class MenuTree {
+public class NavigationMenuModel {
 
 	private int id;
 	

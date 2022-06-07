@@ -44,7 +44,7 @@ public class BentoController {
 	 */
 	@RequestMapping("queryBento")
 	@ResponseBody
-	public Map<String, Object> queryMembers(HttpServletRequest request) {
+	public Map<String, Object> queryBento(HttpServletRequest request) {
 		// 返回結果
 		Map<String, Object> resultMap = bentoService.queryBento(request);
 		return resultMap;
