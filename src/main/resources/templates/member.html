@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>帳號管理</title>
+<link rel="stylesheet" type="text/css" href="themes/black/easyui.css">
+<link rel="stylesheet" type="text/css" href="themes/icon.css">
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="jquery.easyui.min.js"></script>
+<script src="locale/easyui-lang-zh_TW.js"></script>
+</head>
+<body>
+<h2>帳號管理</h2>
+<div>
+		<div>
+			<div fit="true" class="easyui-layout" style="height:455px;">
+			
+				<div collapsible="false" region="west" split="true" title="選單列表" style="width:130px;">
+					<ul id="navigationTree"></ul>
+				</div>
+				
+				<div region="center" class="easyui-layout">
+					<table id="dg" title="帳號列表" class="easyui-datagrid" toolbar="#tb" fitColumns="true" singleSelect="true" pagination="true" rownumbers="true" url="queryMembers" >
+						<thead>
+						<tr>
+							<th field="id" checkbox="true" align="center"></th>
+							<th field="account_name" width="50" align="center">帳號</th>
+							<th field="member_name" width="100" align="center">姓名</th>
+							<th field="add_time" width="200" align="center">建立時間</th>
+						</tr>
+						</thead>
+					</table>
+				</div>
+			</div>	
+			
+		</div>
+	</div>
+</body>
+
+<div id="win" class="easyui-dialog" style="width:400px;height:260px;" closed="true">
+	<form id="userForm" style="padding:10px 20px 10px 40px;">
+		<p>帳	號 : <input name="account_name" type="text"></p>
+		<p>密	碼 : <input name="password" type="password"></p>
+		<p>姓	名 : <input name="member_name" type="text"></p>
+		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="2" label="一般用戶" checked>
+					 <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="1" label="管理者"></p>
+
+		<div style="padding:5px;text-align:center;">
+			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="addMember()">確認</a>
+			<a href="" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+		</div>
+	</form>
+</div>
+
+<div id="dlg" class="easyui-dialog" style="width:400px;height:260px;" closed="true">
+	<form id="fm" style="padding:10px 20px 10px 40px;">
+		<p>帳	號 : <input readonly name="account_name" type="text"></p>
+		<p>密	碼 : <input name="password" type="password"></p>
+		<p>姓	名 : <input name="member_name" type="text"></p>
+		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="0" label="一般用戶" checked>
+					 <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="1" label="管理者"></p>
+					 
+		<div style="padding:5px;text-align:center;">
+			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="editMember()">確認</a>
+			<a href="#" class="easyui-linkbutton" icon="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a>
+		</div>			 
+	</form>
+</div>
+
+<div id="tb">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="openAddWin()">新增</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="openEditWin()">編輯</a>
+    <a id="search" class="easyui-linkbutton" iconCls="icon-reload" plain="true">更新</a>
+</div>
+
+
+</html>
+
+<!--<style>-->
+<!--.searchbox {-->
+<!--border: 1px solid #efefef;-->
+<!--background: #f5f5f5;-->
+<!--}-->
+<!--</style>-->
+
+<script type="text/javascript">
+
+function openAddWin() {
+$('#win').dialog('open').dialog('setTitle','新增帳號');
+resetForm($('#userForm'));
+$('#win').window('open');
+}
+
+function close() {
+$('#win').window('close');
+$('#dlg').window('close');
+}
+
+function addMember() {
+	
+	$.ajax({
+		url: '/addMember',
+		data: $("#userForm").serialize(),
+		type: 'put',
+		dataType: 'json',
+		success: function (data) {
+			if (data.errMsg) {
+				$.messager.alert('提示訊息',data.errMsg);
+				return;
+			}
+			$.messager.alert('提示訊息','新增成功');
+			search();
+			close();
+		}
+	});
+}
+
+function openEditWin(){
+	var row = $('#dg').datagrid('getSelected');
+		if (row){
+			$('#dlg').dialog('open').dialog('setTitle','編輯帳號');
+			$('#fm').form('load',row);
+	}
+}
+
+function editMember(){
+	$.ajax({
+		url: '/editMember',
+		data: $("#fm").serialize(),
+		type: 'put',
+		dataType: 'json',
+		success: function (data) {
+		if (data.errMsg) {
+			$.messager.alert('提示訊息',data.errMsg);
+			return;
+		}
+		$.messager.alert('提示訊息','編輯成功');
+		search();
+		close();
+		}
+	});
+}
+	
+function resetForm($form) {
+    $form.find('input:text, input:password, input:file, select, textarea').val('');
+}
+
+function search(){
+	$('#dg').datagrid('load',{});
+}
+
+$(function(){
+	// 动态添加菜单
+	
+	$("#navigationTree").tree({
+		url: "/menu/queryMenu",
+		onClick:function(node){
+			window.location.href=node.url;
+		}
+	});
+});
+		
+$('#search').click(function(){
+search();
+});
+</script>
