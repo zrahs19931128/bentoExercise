@@ -3,53 +3,64 @@ package com.example.demo.entitiy;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+@Entity
+@Table(name = "member")
 public class MemberEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private int id;
 	
-	private String account_name;
+	@Column(name = "account_name")
+	private String accountName;
 	
-	private String member_name;
+	@Column(name = "member_name")
+	private String memberName;
 	
+	@Column(name = "password")
 	private String password;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date add_time;
+	@Column(name = "author_id")
+	private int authorId;
 	
-//	private List<MemberAuthority> authorities;
+	@Column(name = "add_time")
+	private Date addTime;
 	
+	@Column(name = "update_time")
+	private Date updateTime;
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	public String getAccount_name() {
-		return account_name;
+
+	public String getAccountName() {
+		return accountName;
 	}
-	
-	public void setAccount_name(String account_name) {
-		this.account_name = account_name;
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
 	}
-	
-	public String getMember_name() {
-		return member_name;
+
+	public String getMemberName() {
+		return memberName;
 	}
-	
-	public void setMember_name(String member_name) {
-		this.member_name = member_name;
-	}
-	
-	public Date getAdd_time() {
-		return add_time;
-	}
-	
-	public void setAdd_time(Date add_time) {
-		this.add_time = add_time;
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
 	}
 
 	public String getPassword() {
@@ -59,12 +70,30 @@ public class MemberEntity {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public int getAuthorId() {
+		return authorId;
+	}
+
+	public void setAuthorId(int authorId) {
+		this.authorId = authorId;
+	}
+
+	public Date getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 	
-//	public List<MemberAuthority> getAuthorities() {
-//        return authorities;
-//    }
-//
-//    public void setAuthorities(List<MemberAuthority> authorities) {
-//        this.authorities = authorities;
-//    }
+	
 }

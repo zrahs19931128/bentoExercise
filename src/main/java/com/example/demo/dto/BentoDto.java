@@ -17,7 +17,6 @@ public class BentoDto{
 	private int sellDay;
 	
 	private int sellPerson;
-	
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date addTime;

@@ -24,9 +24,10 @@
 						<thead>
 						<tr>
 							<th field="id" checkbox="true" align="center"></th>
-							<th field="account_name" width="50" align="center">帳號</th>
-							<th field="member_name" width="100" align="center">姓名</th>
-							<th field="add_time" width="200" align="center">建立時間</th>
+							<th field="accountName" width="50" align="center">帳號</th>
+							<th field="memberName" width="100" align="center">姓名</th>
+							<th field="addTime" width="200" align="center">建立時間</th>
+							<th field="password" width="200" align="center" >密碼</th>
 						</tr>
 						</thead>
 					</table>
@@ -39,11 +40,11 @@
 
 <div id="win" class="easyui-dialog" style="width:400px;height:260px;" closed="true">
 	<form id="userForm" style="padding:10px 20px 10px 40px;">
-		<p>帳	號 : <input name="account_name" type="text"></p>
+		<p>帳	號 : <input name="accountName" type="text"></p>
 		<p>密	碼 : <input name="password" type="password"></p>
-		<p>姓	名 : <input name="member_name" type="text"></p>
-		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="2" label="一般用戶" checked>
-					 <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="1" label="管理者"></p>
+		<p>姓	名 : <input name="memberName" type="text"></p>
+		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="author" value="Normal" label="一般用戶" checked>
+					 <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="author" value="Admin" label="管理者"></p>
 
 		<div style="padding:5px;text-align:center;">
 			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="addMember()">確認</a>
@@ -54,11 +55,11 @@
 
 <div id="dlg" class="easyui-dialog" style="width:400px;height:260px;" closed="true">
 	<form id="fm" style="padding:10px 20px 10px 40px;">
-		<p>帳	號 : <input readonly name="account_name" type="text"></p>
+		<p>帳	號 : <input readonly name="accountName" type="text"></p>
 		<p>密	碼 : <input name="password" type="password"></p>
-		<p>姓	名 : <input name="member_name" type="text"></p>
-		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="0" label="一般用戶" checked>
-					 <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="1" label="管理者"></p>
+		<p>姓	名 : <input name="memberName" type="text"></p>
+		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="author" value="Normal" label="一般用戶" checked>
+					 <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="author" value="Admin" label="管理者"></p>
 					 
 		<div style="padding:5px;text-align:center;">
 			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="editMember()">確認</a>
@@ -118,6 +119,7 @@ function addMember() {
 function openEditWin(){
 	var row = $('#dg').datagrid('getSelected');
 		if (row){
+		console.log(row);
 			$('#dlg').dialog('open').dialog('setTitle','編輯帳號');
 			$('#fm').form('load',row);
 	}

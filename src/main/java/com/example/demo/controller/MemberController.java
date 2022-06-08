@@ -11,18 +11,24 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.dto.MemberDto;
 import com.example.demo.service.MemberService;
 import com.example.demo.util.CheckPassword;
 import com.example.demo.util.HandleParamToMap;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 public class MemberController {
@@ -57,22 +63,7 @@ public class MemberController {
 	@RequestMapping("queryMembers")
 	@ResponseBody
 	public Map<String, Object> queryMembers(HttpServletRequest request) {
-
-		// request參數組合
-		Map<String, Object> params = handleParam.handleParamToMap(request);
-		int page = Integer.parseInt(params.get("page").toString());
-		int pageSize = Integer.parseInt(params.get("rows").toString());
-
-		// 帳號總數
-		Integer total = memberService.queryAllMember();
-		List rows = memberService.queryMember(page, pageSize);
-
-		// 返回結果
-		Map<String, Object> resultMap = new HashMap();
-		resultMap.put("total", total);
-		resultMap.put("rows", rows);
-
-		return resultMap;
+		return memberService.queryMember(request);
 	}
 
 	/**
@@ -80,13 +71,15 @@ public class MemberController {
 	 * @新增帳號
 	 * @Date 2022/05/27
 	 * @author sharz
+	 * @throws JsonProcessingException 
 	 * 
 	 */
-	@PutMapping("addMember")
+//	@PutMapping("addMember")
 	@ResponseBody
-	public Map<String, Object> addMember(HttpServletRequest request) {
+	@PutMapping(value = "/addMember", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public Map<String, Object> addMember(@RequestParam Map<String, Object> param) throws JsonProcessingException {
 		
-		Map<String, Object> addMember = memberService.addMember(request);
+		Map<String, Object> addMember = memberService.addMember(param);
 		return addMember;
 	}
 

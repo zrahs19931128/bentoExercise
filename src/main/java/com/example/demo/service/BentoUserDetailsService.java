@@ -34,7 +34,7 @@ public class BentoUserDetailsService implements UserDetailsService {
 //	                .map(auth -> new SimpleGrantedAuthority(auth.name()))
 //	                .collect(Collectors.toList());
 			
-			return new User(member.getAccount_name(),member.getPassword(), Collections.emptyList());
+			return new User(member.getAccountName(),member.getPassword(), Collections.emptyList());
       } catch (Exception e) {
           throw new UsernameNotFoundException("Username is wrong.");
       }
