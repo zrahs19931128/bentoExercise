@@ -46,7 +46,6 @@ public class BentoController {
 	@ResponseBody
 	public Map<String, Object> queryBento(HttpServletRequest request) {
 		// 返回結果
-		Map<String, Object> resultMap = bentoService.queryBento(request);
-		return resultMap;
+		return bentoService.queryBento(request);
 	}
 }
