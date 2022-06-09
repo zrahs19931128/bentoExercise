@@ -37,6 +37,9 @@ public class BentoEntity {
 	
 	@Column(name = "add_time")
 	private Date addTime;
+	
+	@Column(name = "update_time")
+	private Date updateTime;
 
 	public int getMenuId() {
 		return menuId;
@@ -93,5 +96,13 @@ public class BentoEntity {
 	public void setAddTime(Date addTime) {
 		this.addTime = addTime;
 	}
-	
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
 }

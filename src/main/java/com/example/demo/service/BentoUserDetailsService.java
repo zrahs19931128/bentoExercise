@@ -28,11 +28,7 @@ public class BentoUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		try {
-			MemberEntity member = memberService.queryMember(username);
-			
-//			List<SimpleGrantedAuthority> authorities = member.getAuthorities().stream()
-//	                .map(auth -> new SimpleGrantedAuthority(auth.name()))
-//	                .collect(Collectors.toList());
+			MemberEntity member = memberService.findMember("accountName",username).get(0);
 			
 			return new User(member.getAccountName(),member.getPassword(), Collections.emptyList());
       } catch (Exception e) {

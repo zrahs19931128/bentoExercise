@@ -39,39 +39,111 @@
 	</div>
 </body>
 
-<div id="win" class="easyui-dialog" style="width:400px;height:260px;" closed="true">
-	<form id="userForm" style="padding:10px 20px 10px 40px;">
-		<p>帳	號 : <input name="account_name" type="text"></p>
-		<p>密	碼 : <input name="password" type="password"></p>
-		<p>姓	名 : <input name="member_name" type="text"></p>
-		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="0" label="一般用戶" checked>
-					 <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="1" label="管理者"></p>
-
+<div id="win" class="easyui-dialog" style="width:auto-width;height:auto-height;" closed="true">
+	<form id="bentoForm" style="padding:10px 20px 10px 20px;">
+		<table>
+			<tr>
+				<td align="right">便當品名:</td>
+				<td><input name="productName" class="easyui-textbox"></td>
+			</tr>
+			<tr>
+				<td align="right">價格:</td>
+				<td><input name="price" class="easyui-numberbox" min="0" precision="0"></td>
+			</tr>
+			<tr>
+				<td align="right">狀態:</td>
+				<td><select class="easyui-combobox" name="shelfStatus" style="width:148px">
+					<option value="1">上架</option>
+					<option value="0">下架</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td align="right">每日可販賣數量:</td>
+				<td><input name="sellDay" class="easyui-numberbox" min="1" precision="0"></td>
+			</tr>
+			<tr>
+				<td align="right">每人可訂購數量:</td>
+				<td><input name="sellPerson" class="easyui-numberbox" min="1" precision="0"></td>
+			</tr>
+		</table>
+		
 		<div style="padding:5px;text-align:center;">
-			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="addMember()">確認</a>
-			<a href="" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="addBento()">確認</a>
+			<a href="#" class="easyui-linkbutton" icon="icon-cancel" onclick="javascript:$('#win').dialog('close')">取消</a>
 		</div>
 	</form>
 </div>
 
-<div id="dlg" class="easyui-dialog" style="width:400px;height:260px;" closed="true">
+<div id="dlg" class="easyui-dialog" style="width:auto-width;height:auto-height;" closed="true">
 	<form id="fm" style="padding:10px 20px 10px 40px;">
-		<p>帳	號 : <input readonly name="account_name" type="text"></p>
-		<p>密	碼 : <input name="password" type="password"></p>
-		<p>姓	名 : <input name="member_name" type="text"></p>
-		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="0" label="一般用戶" checked>
-					 <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="isAdmin" value="1" label="管理者"></p>
+		<table>
+			<tr>
+				<td align="right">便當品名:</td>
+				<td><input name="productName" class="easyui-textbox"></td>
+			</tr>
+			<tr>
+				<td align="right">價格:</td>
+				<td><input name="price" class="easyui-numberbox" min="0" precision="0"></td>
+			</tr>
+			<tr>
+				<td align="right">狀態:</td>
+				<td><select class="easyui-combobox" name="shelfStatus" style="width:148px">
+					<option value="1">上架</option>
+					<option value="0">下架</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td align="right">每日可販賣數量:</td>
+				<td><input name="sellDay" class="easyui-numberbox" min="1" precision="0"></td>
+			</tr>
+			<tr>
+				<td align="right">每人可訂購數量:</td>
+				<td><input name="sellPerson" class="easyui-numberbox" min="1" precision="0"></td>
+			</tr>
+			<tr hidden="true">
+				<td align="right">menuId:</td>
+				<td><input name="menuId" class="easyui-numberbox"></td>
+			</tr>
+		</table>
 					 
 		<div style="padding:5px;text-align:center;">
-			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="editMember()">確認</a>
+			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="editBento()">確認</a>
 			<a href="#" class="easyui-linkbutton" icon="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a>
 		</div>			 
+	</form>
+</div>
+
+<div id="searchdlg" class="easyui-dialog" style="width:auto-width;height:auto-height;" closed="true">
+	<form id="searchForm" style="padding:10px 20px 10px 40px;">
+		<table>
+			<tr>
+				<td>便當品名	:</td>
+				<td><input name="productName" class="easyui-textbox"></td>
+			</tr>
+			<tr>
+				<td>建立日期	:</td>
+				<td> <input data-options="formatter:myformatter,prompt:'開始時間'" name="startTime" class="easyui-datebox"> ~ <input data-options="formatter:myformatter,prompt:'結束時間'" name="endTime" class="easyui-datebox"></td>
+			</tr>
+			<tr>
+				<td align="right">狀態 :</td>
+				<td><select class="easyui-combobox" name="shelfStatus" style="width:148px;">
+					<option value="1">上架</option>
+					<option value="0">下架</option>
+				</select></td>
+			</tr>
+		</table>				 
+		
+		<div style="padding:5px;text-align:center;">
+			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="searchBento()">確認</a>
+			<a href="#" class="easyui-linkbutton" icon="icon-cancel" onclick="javascript:$('#searchdlg').dialog('close')">取消</a>
+		</div>	 
 	</form>
 </div>
 
 <div id="tb">
     <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="openAddWin()">新增</a>
     <a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="openEditWin()">編輯</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="openSearchWin()">進階查詢</a>
     <a id="search" class="easyui-linkbutton" iconCls="icon-reload" plain="true">更新</a>
 </div>
 
@@ -87,21 +159,37 @@
 <script type="text/javascript">
 
 function openAddWin() {
-$('#win').dialog('open').dialog('setTitle','新增帳號');
-resetForm($('#userForm'));
+$('#userForm').form('clear')
+$('#win').dialog('open').dialog('setTitle','新增便當');
 $('#win').window('open');
+}
+
+function openEditWin(){
+	var row = $('#dg').datagrid('getSelected');
+	console.log(row);
+		if (row){
+			$('#dlg').dialog('open').dialog('setTitle','編輯便當');
+			$('#fm').form('load',row);
+	}
+}
+
+function openSearchWin() {
+$('#searchForm').form('clear')
+$('#searchdlg').dialog('open').dialog('setTitle','進階查詢');
+$('#searchdlg').window('open');
 }
 
 function close() {
 $('#win').window('close');
 $('#dlg').window('close');
+$('#searchdlg').window('close');
 }
 
-function addMember() {
+function addBento() {
 	
 	$.ajax({
-		url: '/addMember',
-		data: $("#userForm").serialize(),
+		url: '/addBento',
+		data: $("#bentoForm").serialize(),
 		type: 'put',
 		dataType: 'json',
 		success: function (data) {
@@ -116,17 +204,9 @@ function addMember() {
 	});
 }
 
-function openEditWin(){
-	var row = $('#dg').datagrid('getSelected');
-		if (row){
-			$('#dlg').dialog('open').dialog('setTitle','編輯帳號');
-			$('#fm').form('load',row);
-	}
-}
-
-function editMember(){
+function editBento(){
 	$.ajax({
-		url: '/editMember',
+		url: '/editBento',
 		data: $("#fm").serialize(),
 		type: 'put',
 		dataType: 'json',
@@ -142,6 +222,12 @@ function editMember(){
 	});
 }
 
+function searchBento(){
+$('#dg').datagrid({
+	url:'searchBento'
+});
+}
+
 function formatShelf(val,row){
 		if (val === 1){
 			return '上架';
@@ -149,10 +235,6 @@ function formatShelf(val,row){
 			return '下架';
 		}
 	}
-	
-function resetForm($form) {
-    $form.find('input:text, input:password, input:file, select, textarea').val('');
-}
 
 function search(){
 	$('#dg').datagrid('load',{});
@@ -169,7 +251,15 @@ $(function(){
 	});
 });
 
+function myformatter(date){
+			var y = date.getFullYear();
+			var m = date.getMonth()+1;
+			var d = date.getDate();
+			return y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);
+		}
+		
 $('#search').click(function(){
 search();
 });
+
 </script>

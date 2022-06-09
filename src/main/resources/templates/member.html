@@ -27,7 +27,6 @@
 							<th field="accountName" width="50" align="center">帳號</th>
 							<th field="memberName" width="100" align="center">姓名</th>
 							<th field="addTime" width="200" align="center">建立時間</th>
-							<th field="password" width="200" align="center" >密碼</th>
 						</tr>
 						</thead>
 					</table>
@@ -48,14 +47,14 @@
 
 		<div style="padding:5px;text-align:center;">
 			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="addMember()">確認</a>
-			<a href="" class="easyui-linkbutton" icon="icon-cancel">取消</a>
+			<a href="#" class="easyui-linkbutton" icon="icon-cancel" onclick="javascript:$('#win').dialog('close')">取消</a>
 		</div>
 	</form>
 </div>
 
 <div id="dlg" class="easyui-dialog" style="width:400px;height:260px;" closed="true">
 	<form id="fm" style="padding:10px 20px 10px 40px;">
-		<p>帳	號 : <input readonly name="accountName" type="text"></p>
+		<p>帳	號 : <input name="accountName" type="text"></p>
 		<p>密	碼 : <input name="password" type="password"></p>
 		<p>姓	名 : <input name="memberName" type="text"></p>
 		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="author" value="Normal" label="一般用戶" checked>
@@ -119,7 +118,6 @@ function addMember() {
 function openEditWin(){
 	var row = $('#dg').datagrid('getSelected');
 		if (row){
-		console.log(row);
 			$('#dlg').dialog('open').dialog('setTitle','編輯帳號');
 			$('#fm').form('load',row);
 	}

@@ -48,16 +48,17 @@ public class MemberController {
 	@Resource
 	private CheckPassword checkPassword;
 
-//	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
 	@RequestMapping("/memberList")
 	public String page(Model model) {
 		return "member";
 	}
 
-	/*
+	/**
 	 * 
-	 * 查詢全部帳號資料
+	 * @查詢帳號
+	 * @Date 2022/05/27
+	 * @author sharz
+	 * @apiNote 查詢全部帳號資料
 	 * 
 	 */
 	@RequestMapping("queryMembers")
@@ -76,7 +77,7 @@ public class MemberController {
 	 */
 //	@PutMapping("addMember")
 	@ResponseBody
-	@PutMapping(value = "/addMember", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PutMapping("addMember")
 	public Map<String, Object> addMember(@RequestParam Map<String, Object> param) throws JsonProcessingException {
 		
 		Map<String, Object> addMember = memberService.addMember(param);
@@ -88,12 +89,13 @@ public class MemberController {
 	 * @更新帳號
 	 * @Date 2022/05/27
 	 * @author sharz
+	 * @throws JsonProcessingException 
 	 * 
 	 */
 	@PutMapping("editMember")
 	@ResponseBody
-	public Map<String, Object> editMember(HttpServletRequest request) {
-		Map<String, Object> editMember = memberService.editMember(request);
+	public Map<String, Object> editMember(@RequestParam Map<String, Object> param) throws JsonProcessingException {
+		Map<String, Object> editMember = memberService.editMember(param);
 		return editMember;
 	}
 }
