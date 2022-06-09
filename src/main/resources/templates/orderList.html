@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>訂單管理</title>
+<link rel="stylesheet" type="text/css" href="themes/black/easyui.css">
+<link rel="stylesheet" type="text/css" href="themes/icon.css">
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="jquery.easyui.min.js"></script>
+<script src="locale/easyui-lang-zh_TW.js"></script>
+</head>
+<body>
+<h2>訂單管理</h2>
+	
+	<div>
+		<div fit="true" class="easyui-layout" style="height:455px;">
+			
+			<div collapsible="false" region="west" split="true" title="選單列表" style="width:130px;">
+				<ul id="navigationTree"></ul>
+			</div>
+				
+			<div region="center" class="easyui-layout">
+			</div>
+		</div>	
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+$(function(){
+	// 动态添加菜单
+	
+	$("#navigationTree").tree({
+		url: "/menu/queryMenu",
+		onClick:function(node){
+			window.location.href=node.url;
+		}
+	});
+});
+
+</script>
