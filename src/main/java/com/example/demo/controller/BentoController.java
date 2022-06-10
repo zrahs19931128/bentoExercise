@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.entitiy.BentoEntity;
+import com.example.demo.model.BentoEntity;
 import com.example.demo.service.BentoService;
 import com.example.demo.util.HandleParamToMap;
+import com.example.demo.vo.BentoSearchVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
@@ -81,13 +83,14 @@ public class BentoController {
 	 * @按條件查詢便當
 	 * @Date 2022/06/08
 	 * @author sharz
+	 * @throws ParseException 
 	 * @throws JsonProcessingException 
 	 * 
 	 */
-	@RequestMapping("searchBento")
+	@PutMapping("searchBento")
 	@ResponseBody
-	public Map<String, Object> searchBento(HttpServletRequest request) {
+	public Map<String, Object> searchBento(BentoSearchVo param) throws ParseException {
 		// 返回結果
-		return bentoService.searchBento(request);
+		return bentoService.searchBento(param);
 	}
 }

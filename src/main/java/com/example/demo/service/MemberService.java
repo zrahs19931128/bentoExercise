@@ -29,13 +29,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.dto.MemberDto;
-import com.example.demo.dto.MemberEditDto;
-import com.example.demo.entitiy.AuthorityEntity;
-import com.example.demo.entitiy.MemberEntity;
-import com.example.demo.repository.MemberRepository;
+import com.example.demo.model.AuthorityEntity;
+import com.example.demo.model.MemberAuthorEntity;
+import com.example.demo.model.MemberEntity;
+import com.example.demo.repos.MemberAuthorRepository;
+import com.example.demo.repos.MemberRepository;
+import com.example.demo.util.AuthorEnum;
 import com.example.demo.util.CheckPassword;
 import com.example.demo.util.HandleParamToMap;
+import com.example.demo.vo.MemberVo;
+import com.example.demo.vo.MemberEditVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -53,6 +56,9 @@ public class MemberService {
 
 	@Autowired
 	private MemberRepository memberRepository;
+	
+	@Autowired
+	private MemberAuthorRepository memberAuthorRepository;
 	
 	@PersistenceContext
     EntityManager em;
@@ -91,7 +97,7 @@ public class MemberService {
 		List<MemberEntity> dataList = pageList.getContent();
 
 		// 將entity轉為DTO
-		List<MemberDto> memberDto = dataList.stream()
+		List<MemberVo> memberDto = dataList.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 
@@ -115,13 +121,13 @@ public class MemberService {
 
 		ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(param);
-        MemberEditDto dto = mapper.readValue(jsonString, MemberEditDto.class);
+        MemberEditVo dto = mapper.readValue(jsonString, MemberEditVo.class);
         
 		// params參數組合
 		String account_name = dto.getAccountName();
 		String member_name = dto.getMemberName();
 		String password = dto.getPassword();
-		String author = dto.getAuthor();
+		int author = getAuthorId(dto.getAuthor());
 		
 		// 返回結果
 		Map<String, Object> resultMap = new HashMap();
@@ -164,9 +170,13 @@ public class MemberService {
 			entity.setMemberName(member_name);
 			entity.setPassword(password);
 			entity.setAddTime(new Date());
-			entity.setAuthorId(getAuthorId(author));
+			entity.setAuthorId(author);
 			memberRepository.save(entity);
 			
+			MemberAuthorEntity memberAuthor = new MemberAuthorEntity();
+			memberAuthor.setAuthorId(author);
+			memberAuthor.setMemberId(entity.getId());
+			memberAuthorRepository.save(memberAuthor);
 		}catch(RuntimeException e) {
 			resultMap.put("errMsg", "新增失敗");
 		}
@@ -179,14 +189,14 @@ public class MemberService {
 		
 		ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(param);
-        MemberEditDto dto = mapper.readValue(jsonString, MemberEditDto.class);
+        MemberEditVo dto = mapper.readValue(jsonString, MemberEditVo.class);
         
         MemberEntity entity = findMember("accountName",dto.getAccountName()).get(0);
         
 		// params參數組合
 		String member_name = dto.getMemberName();
 		String password = dto.getPassword();
-		String author = dto.getAuthor();
+		int author = getAuthorId(dto.getAuthor());
 
 		// 返回結果
 		Map<String, Object> resultMap = new HashMap();
@@ -216,10 +226,14 @@ public class MemberService {
 		password = passwordEncoder.encode(password);
 
 		entity.setUpdateTime(new Date());
-		entity.setAuthorId(getAuthorId(author));
+		entity.setAuthorId(author);
 		entity.setMemberName(member_name);
 		entity.setPassword(password);
 		memberRepository.save(entity);
+		
+		MemberAuthorEntity memberAuthor = findMemberAuthor("memberId",entity.getId()).get(0);
+		memberAuthor.setAuthorId(author);
+		memberAuthorRepository.save(memberAuthor);
 		
 		return resultMap;
 	}
@@ -261,12 +275,31 @@ public class MemberService {
         return memberEntity.getResultList();
 	}
 	
-	public MemberDto convertToDto(MemberEntity entity) {
-		MemberDto dto = new MemberDto();
+	public List<MemberAuthorEntity> findMemberAuthor(String column,int value) {
+		
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		
+	    //select Member
+	    CriteriaQuery<MemberAuthorEntity> query = cb.createQuery(MemberAuthorEntity.class);
+	    
+	    //from member
+	    Root<MemberAuthorEntity> memberEntityRoot = query.from(MemberAuthorEntity.class);
+	    
+	    //where accountName = :accountName
+	    Predicate predName = cb.equal(memberEntityRoot.get(column), value);
+        query.where(predName);
+        
+        TypedQuery<MemberAuthorEntity> memberEntity = em.createQuery(query);
+        return memberEntity.getResultList();
+	}
+	
+	public MemberVo convertToDto(MemberEntity entity) {
+		MemberVo dto = new MemberVo();
 		dto.setAccountName(entity.getAccountName());
 		dto.setMemberName(entity.getMemberName());
 		dto.setAddTime(entity.getAddTime());
 		dto.setPassword(entity.getPassword());
+		dto.setAuthor(AuthorEnum.getAuthor(entity.getAuthorId()));
 		return dto;
 	}
 }

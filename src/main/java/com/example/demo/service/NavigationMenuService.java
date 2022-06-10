@@ -9,9 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.NavigationMenuDto;
-import com.example.demo.entitiy.NavigationMenuEntity;
-import com.example.demo.repository.NavigationMenuRepository;
+import com.example.demo.model.NavigationMenuEntity;
+import com.example.demo.repos.NavigationMenuRepository;
+import com.example.demo.vo.NavigationMenuVo;
 
 @Service
 public class NavigationMenuService {
@@ -22,7 +22,7 @@ public class NavigationMenuService {
 	@Autowired
 	private NavigationMenuRepository navigationMenuRepository;
 	
-	public List<NavigationMenuDto> queryMenu(){
+	public List<NavigationMenuVo> queryMenu(){
 		
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		
@@ -34,15 +34,15 @@ public class NavigationMenuService {
 				new Object[] { username },
 				new BeanPropertyRowMapper<NavigationMenuEntity>(NavigationMenuEntity.class));
 		
-		List<NavigationMenuDto> menuDto = dataList.stream()
+		List<NavigationMenuVo> menuDto = dataList.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
 		return menuDto;
 	}
 	
-	public NavigationMenuDto convertToDto (NavigationMenuEntity entity){
-		NavigationMenuDto dto = new NavigationMenuDto();
+	public NavigationMenuVo convertToDto (NavigationMenuEntity entity){
+		NavigationMenuVo dto = new NavigationMenuVo();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
 		dto.setUrl(entity.getUrl());

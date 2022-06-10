@@ -13,10 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.dto.BentoDto;
-import com.example.demo.dto.NavigationMenuDto;
-import com.example.demo.entitiy.NavigationMenuEntity;
+import com.example.demo.model.NavigationMenuEntity;
 import com.example.demo.service.NavigationMenuService;
+import com.example.demo.vo.BentoVo;
+import com.example.demo.vo.NavigationMenuVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller

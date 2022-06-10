@@ -1,8 +1,8 @@
-package com.example.demo.repository;
+package com.example.demo.repos;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.entitiy.AuthorityEntity;
+import com.example.demo.model.AuthorityEntity;
 
 public interface AuthorityRepository extends JpaRepository<AuthorityEntity, Integer>{
 

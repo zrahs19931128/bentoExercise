@@ -1,6 +1,6 @@
-package com.example.demo.dto;
+package com.example.demo.vo;
 
-public class BentoEditDto {
+public class BentoEditVo {
 
 	private int menuId;
 	

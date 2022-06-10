@@ -1,6 +1,6 @@
-package com.example.demo.dto;
+package com.example.demo.vo;
 
-public class MemberEditDto {
+public class MemberEditVo {
 
 	private String accountName;
 	

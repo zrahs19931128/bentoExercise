@@ -37,14 +37,30 @@
 	</div>
 </body>
 
-<div id="win" class="easyui-dialog" style="width:400px;height:260px;" closed="true">
-	<form id="userForm" style="padding:10px 20px 10px 40px;">
-		<p>帳	號 : <input name="accountName" type="text"></p>
-		<p>密	碼 : <input name="password" type="password"></p>
-		<p>姓	名 : <input name="memberName" type="text"></p>
-		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="author" value="Normal" label="一般用戶" checked>
-					 <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="author" value="Admin" label="管理者"></p>
-
+<div id="win" class="easyui-dialog" style="width:auto-width;height:auto-height;" closed="true">
+	<form id="userForm" style="padding:10px 20px 10px 20px;">
+		<table>
+			<tr>
+				<td>帳號:</td>
+				<td><input class="easyui-textbox" name="accountName"></td>
+			</tr>
+			<tr>
+				<td>密碼:</td>
+				<td><input class="easyui-passwordbox" name="password"></td>
+			</tr>
+			<tr>
+				<td>姓名:</td>
+				<td><input class="easyui-textbox" name="memberName"></td>
+			</tr>
+			<tr>
+				<td align="right">角色:</td>
+				<td><select class="easyui-combobox" name="author" style="width:150px;">
+					<option value="Normal">一般用戶</option>
+					<option value="Admin">管理者</option>
+				</select></td>
+			</tr>
+		</table>
+		
 		<div style="padding:5px;text-align:center;">
 			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="addMember()">確認</a>
 			<a href="#" class="easyui-linkbutton" icon="icon-cancel" onclick="javascript:$('#win').dialog('close')">取消</a>
@@ -52,13 +68,29 @@
 	</form>
 </div>
 
-<div id="dlg" class="easyui-dialog" style="width:400px;height:260px;" closed="true">
-	<form id="fm" style="padding:10px 20px 10px 40px;">
-		<p>帳	號 : <input name="accountName" type="text"></p>
-		<p>密	碼 : <input name="password" type="password"></p>
-		<p>姓	名 : <input name="memberName" type="text"></p>
-		<p>角	色 : <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="author" value="Normal" label="一般用戶" checked>
-					 <input labelAlign="center" labelWidth="95" width="180" class="easyui-radiobutton" name="author" value="Admin" label="管理者"></p>
+<div id="dlg" class="easyui-dialog" style="width:auto-width;height:auto-height;" closed="true">
+	<form id="fm" style="padding:10px 20px 10px 20px;">
+		<table>
+			<tr>
+				<td>帳號:</td>
+				<td><input class="easyui-textbox" name="accountName"></td>
+			</tr>
+			<tr>
+				<td>密碼:</td>
+				<td><input class="easyui-passwordbox" name="password"></td>
+			</tr>
+			<tr>
+				<td>姓名:</td>
+				<td><input class="easyui-textbox" name="memberName"></td>
+			</tr>
+			<tr>
+				<td align="right">角色:</td>
+				<td><select class="easyui-combobox" name="author" style="width:150px;">
+					<option value="Normal">一般用戶</option>
+					<option value="Admin">管理者</option>
+				</select></td>
+			</tr>
+		</table>
 					 
 		<div style="padding:5px;text-align:center;">
 			<a href="#" class="easyui-linkbutton" icon="icon-ok" onclick="editMember()">確認</a>
@@ -86,8 +118,8 @@
 <script type="text/javascript">
 
 function openAddWin() {
+$('#userForm').form('clear')
 $('#win').dialog('open').dialog('setTitle','新增帳號');
-resetForm($('#userForm'));
 $('#win').window('open');
 }
 
@@ -117,6 +149,7 @@ function addMember() {
 
 function openEditWin(){
 	var row = $('#dg').datagrid('getSelected');
+	console.log(row);
 		if (row){
 			$('#dlg').dialog('open').dialog('setTitle','編輯帳號');
 			$('#fm').form('load',row);

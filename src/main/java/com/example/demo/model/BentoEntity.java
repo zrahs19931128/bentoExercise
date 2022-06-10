@@ -1,25 +1,45 @@
-package com.example.demo.dto;
+package com.example.demo.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class BentoDto{
+@Entity
+@Table(name = "bento_menu")
+public class BentoEntity {
 
+	@Id
+	@Column(name = "menu_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int menuId;
 	
+	@Column(name = "product_name")
 	private String productName;
 	
+	@Column(name = "price")
 	private int price;
 	
+	@Column(name = "shelf_status")
 	private int shelfStatus;
 	
+	@Column(name = "sell_day")
 	private int sellDay;
 	
+	@Column(name = "sell_person")
 	private int sellPerson;
-
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	
+	@Column(name = "add_time")
 	private Date addTime;
+	
+	@Column(name = "update_time")
+	private Date updateTime;
 
 	public int getMenuId() {
 		return menuId;
@@ -76,4 +96,13 @@ public class BentoDto{
 	public void setAddTime(Date addTime) {
 		this.addTime = addTime;
 	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
 }

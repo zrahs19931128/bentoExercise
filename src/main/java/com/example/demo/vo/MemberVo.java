@@ -1,10 +1,10 @@
-package com.example.demo.dto;
+package com.example.demo.vo;
 
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class MemberDto {
+public class MemberVo {
 
 	
 	private String accountName;
@@ -12,6 +12,8 @@ public class MemberDto {
 	private String memberName;
 	
 	private String password;
+	
+	private String author;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date addTime;
@@ -38,6 +40,14 @@ public class MemberDto {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
 	public Date getAddTime() {

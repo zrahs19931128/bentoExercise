@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.dto.MemberDto;
 import com.example.demo.service.MemberService;
 import com.example.demo.util.CheckPassword;
 import com.example.demo.util.HandleParamToMap;
+import com.example.demo.vo.MemberVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller

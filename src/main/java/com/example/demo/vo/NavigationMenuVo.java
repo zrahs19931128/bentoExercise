@@ -1,8 +1,8 @@
-package com.example.demo.dto;
+package com.example.demo.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class NavigationMenuDto {
+public class NavigationMenuVo {
 
 	private int id;
 	

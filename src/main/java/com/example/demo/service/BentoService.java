@@ -5,12 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
@@ -24,18 +28,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.dto.BentoDto;
-import com.example.demo.dto.BentoEditDto;
-import com.example.demo.dto.MemberEditDto;
-import com.example.demo.entitiy.BentoEntity;
-import com.example.demo.entitiy.MemberEntity;
-import com.example.demo.repository.BentoRepository;
+import com.example.demo.model.BentoEntity;
+import com.example.demo.model.MemberEntity;
+import com.example.demo.repos.BentoRepository;
 import com.example.demo.util.HandleParamToMap;
+import com.example.demo.vo.BentoVo;
+import com.example.demo.vo.BentoEditVo;
+import com.example.demo.vo.BentoSearchVo;
+import com.example.demo.vo.MemberEditVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class BentoService {
+	
+	private SimpleDateFormat timeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	
 	@Autowired
 	private BentoRepository bentoRepository;
@@ -60,7 +67,7 @@ public class BentoService {
 		List<BentoEntity> dataList = pageList.getContent();
 				
 		//將entity轉為DTO
-		List<BentoDto> bentoDto = dataList.stream()
+		List<BentoVo> bentoDto = dataList.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
@@ -88,7 +95,7 @@ public class BentoService {
 
 		ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(param);
-        BentoEditDto dto = mapper.readValue(jsonString, BentoEditDto.class);
+        BentoEditVo dto = mapper.readValue(jsonString, BentoEditVo.class);
         
 		// params參數組合
 		String productName = dto.getProductName();
@@ -136,7 +143,7 @@ public class BentoService {
 		
 		ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(param);
-        BentoEditDto dto = mapper.readValue(jsonString, BentoEditDto.class);
+        BentoEditVo dto = mapper.readValue(jsonString, BentoEditVo.class);
         
 		// params參數組合
 		String productName = dto.getProductName();
@@ -176,9 +183,61 @@ public class BentoService {
 		return resultMap;
 	}
 	
-	public Map<String, Object> searchBento(HttpServletRequest request){
+	public Map<String, Object> searchBento(BentoSearchVo param) throws ParseException{
 		
-		return null;
+		String productName = param.getProductName();
+		String startTime = param.getStartTime();
+		String endTime = param.getEndTime();
+		String shelfStatus = param.getShelfStatus();
+		
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		
+	    //select Member
+	    CriteriaQuery<BentoEntity> query = cb.createQuery(BentoEntity.class);
+	    
+	    //from member
+	    Root<BentoEntity> bentoEntityRoot = query.from(BentoEntity.class);
+	    
+	    //where accountName = :accountName
+//	    Predicate predName = cb.equal(bentoEntityRoot.get(column), value);
+	    List<Predicate> predWhere = new ArrayList<Predicate>();
+	    if(productName.length() > 0 ) {
+	    	predWhere.add(cb.like(bentoEntityRoot.get("productName"),"%"+productName+"%"));
+	    }
+//	    if(startTime !=null && endTime != null) {
+//	    	predWhere.add(cb.between(bentoEntityRoot.get("addTime"), startTime, endTime));
+//	    }
+	    
+	    if(startTime.length() > 0 ) {
+	    	Date startDate = timeFormat.parse(startTime+" 00:00:00");
+	    	predWhere.add(cb.greaterThanOrEqualTo(bentoEntityRoot.get("addTime"), startDate));
+	    }
+	    
+	    if(endTime.length() > 0) {
+	    	Date endDate = timeFormat.parse(endTime+" 23:59:59");
+	    	predWhere.add(cb.lessThanOrEqualTo(bentoEntityRoot.get("addTime"), endDate));
+	    }
+	    
+	    if(shelfStatus.length() > 0) {
+	    	predWhere.add(cb.equal(bentoEntityRoot.get("shelfStatus"), shelfStatus));
+	    }
+	    
+	    Order orderByIdDesc = cb.desc(bentoEntityRoot.get("addTime"));
+	    
+        query.where(predWhere.toArray(new Predicate[] {}));
+        query.orderBy(orderByIdDesc);
+        
+        TypedQuery<BentoEntity> bentoEntity = em.createQuery(query);
+        
+        List<BentoVo> bentoDto = bentoEntity.getResultList().stream()
+				.map(this::convertToDto)
+				.collect(Collectors.toList());
+        
+        Map<String, Object> resultMap = new HashMap();
+        resultMap.put("total", bentoDto.size());
+        resultMap.put("rows", bentoDto);
+        
+		return resultMap;
 	}
 	
 	public List<BentoEntity> findBento(String column,String value) {
@@ -191,16 +250,16 @@ public class BentoService {
 	    //from member
 	    Root<BentoEntity> bentoEntityRoot = query.from(BentoEntity.class);
 	    
-	    //where accountName = :accountName
-	    Predicate predName = cb.equal(bentoEntityRoot.get(column), value);
-        query.where(predName);
+	    //where column = :value
+	    Predicate predWhere = cb.equal(bentoEntityRoot.get(column), value);
+        query.where(predWhere);
         
         TypedQuery<BentoEntity> bentoEntity = em.createQuery(query);
         return bentoEntity.getResultList();
 	}
 	
-	public BentoDto convertToDto(BentoEntity entity) {
-		BentoDto dto = new BentoDto();
+	public BentoVo convertToDto(BentoEntity entity) {
+		BentoVo dto = new BentoVo();
 		dto.setMenuId(entity.getMenuId());
 		dto.setProductName(entity.getProductName());
 		dto.setPrice(entity.getPrice());
