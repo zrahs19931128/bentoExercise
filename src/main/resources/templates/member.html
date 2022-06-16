@@ -108,6 +108,13 @@
 
 </html>
 
+<!--<style>-->
+<!--.searchbox {-->
+<!--border: 1px solid #efefef;-->
+<!--background: #f5f5f5;-->
+<!--}-->
+<!--</style>-->
+
 <script type="text/javascript">
 
 function openAddWin() {
@@ -165,6 +172,10 @@ function editMember(){
 		close();
 		}
 	});
+}
+	
+function resetForm($form) {
+    $form.find('input:text, input:password, input:file, select, textarea').val('');
 }
 
 function search(){
