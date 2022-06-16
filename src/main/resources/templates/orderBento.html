@@ -41,9 +41,7 @@
 </body>
 
 <div id="tb">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="$('#win').dialog('open')">新增</a>
-	<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="openEditWin()">編輯</a>
-	<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="openSearchWin()">進階查詢</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="$('#win').dialog('open')">訂購</a>
 	<a id="search" class="easyui-linkbutton" iconCls="icon-reload" plain="true">更新</a>
 </div>
 
@@ -70,23 +68,6 @@
 		$('#win').window('open');
 	}
 
-	function openEditWin() {
-		var data = $("#dg").datagrid("getChecked");
-		console.log(data);
-		var row = $('#dg').datagrid('getSelections');
-		console.log(row);
-		if (row) {
-			$('#dlg').dialog('open').dialog('setTitle', '編輯便當');
-			$('#fm').form('load', row);
-		}
-	}
-
-	function openSearchWin() {
-		$('#searchForm').form('clear')
-		$('#searchdlg').dialog('open').dialog('setTitle', '進階查詢');
-		$('#searchdlg').window('open');
-	}
-
 	function close() {
 		$('#win').window('close');
 		$('#dlg').window('close');
@@ -94,21 +75,21 @@
 	}
 
 	function addBento() {
-		
+
 		var rows = [];
-		var dataList=[];
+		var dataList = [];
 		dataList = $('#dg').datagrid('getChecked');
-		for(var i=0;i<dataList.length;i++){
-		var row={};
-		row.menuId=dataList[i].menuId;
-		row.price=dataList[i].price;
-		row.orderCount=dataList[i].orderCount;
-		row.sellPerson=dataList[i].sellPerson;
-		row.sellDay=dataList[i].sellDay;
-		row.addTime=dataList[i].addTime;
-		row.productName=dataList[i].productName;
-		rows.push(row);
-		
+		for (var i = 0; i < dataList.length; i++) {
+			var row = {};
+			row.menuId = dataList[i].menuId;
+			row.price = dataList[i].price;
+			row.orderCount = dataList[i].orderCount;
+			row.sellPerson = dataList[i].sellPerson;
+			row.sellDay = dataList[i].sellDay;
+			row.addTime = dataList[i].addTime;
+			row.productName = dataList[i].productName;
+			rows.push(row);
+
 		}
 		console.log(JSON.stringify(rows[0]));
 		console.log(rows[0]);
@@ -117,7 +98,7 @@
 			data: JSON.stringify(rows),
 			type: 'put',
 			dataType: 'json',
-			contentType:'application/json',
+			contentType: 'application/json',
 			success: function (data) {
 				if (data.errMsg) {
 					$.messager.alert('提示訊息', data.errMsg);
@@ -130,52 +111,7 @@
 			}
 		});
 	}
-
-	function editBento() {
-		$.ajax({
-			url: '/editBento',
-			data: $("#fm").serialize(),
-			type: 'put',
-			dataType: 'json',
-			success: function (data) {
-				if (data.errMsg) {
-					$.messager.alert('提示訊息', data.errMsg);
-					return;
-				}
-				$.messager.alert('提示訊息', '編輯成功');
-				search();
-				$("#dg").datagrid("reload",serializeForm($('#dg')));
-				close();
-			}
-		});
-	}
-
-	function searchBento() {
-		$.ajax({
-			url: '/searchBento',
-			data: $("#searchForm").serialize(),
-			type: 'put',
-			dataType: 'json',
-			success: function (data) {
-				$('#dg').datagrid('loadData', data.rows);
-				close();
-			}
-		});
-
-	}
-
-	function formatShelf(val, row) {
-		if (val === 1) {
-			return '上架';
-		} else {
-			return '下架';
-		}
-	}
-
-	function search() {
-		$('#dg').datagrid('load', {});
-	}
-
+	
 	$(function () {
 		// 动态添加菜单
 
@@ -187,16 +123,13 @@
 		});
 	});
 
-	function myformatter(date) {
-		var y = date.getFullYear();
-		var m = date.getMonth() + 1;
-		var d = date.getDate();
-		return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
-	}
-
 	$('#search').click(function () {
 		search();
 	});
+
+	function search() {
+		$('#dg').datagrid('load', {});
+	}
 	
 	$(function () {
 		$('#dg').datagrid('enableCellEditing').datagrid('gotoCell', {
