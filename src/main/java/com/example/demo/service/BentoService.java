@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,8 +15,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -42,11 +39,11 @@ import com.example.demo.model.OrderListEntity;
 import com.example.demo.repos.BentoRepository;
 import com.example.demo.repos.OrderListRepository;
 import com.example.demo.util.HandleParamToMap;
+import com.example.demo.util.OrderNumber;
 import com.example.demo.vo.BentoVo;
 import com.example.demo.vo.BentoEditVo;
 import com.example.demo.vo.BentoOrderEditVo;
 import com.example.demo.vo.BentoSearchVo;
-import com.example.demo.vo.MemberEditVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -82,6 +79,9 @@ public class BentoService {
 
 	@Autowired
 	private HandleParamToMap handleParam;
+	
+	@Autowired
+	private OrderNumber orderNumber;
 	
 	@PersistenceContext
     EntityManager em;
@@ -237,8 +237,7 @@ public class BentoService {
 		
 		//訂單
 		OrderListEntity orderList = new OrderListEntity();
-		orderList.setOrderNumber("2022061600001");
-		orderListRepository.save(orderList);
+		
 		//訂單明細
 		List<OrderDetailEntity> detaiList = new ArrayList<>();
 		
@@ -286,7 +285,7 @@ public class BentoService {
 		orderList.setOrderName(member.getMemberName());
 		orderList.setTotalPrice(totalPrice);
 		orderList.setOrderTime(date);
-		orderList.setOrderNumber("2022061600001");
+		orderList.setOrderNumber(orderNumber.getCurrentOrderNumber(date));
 		orderListRepository.save(orderList);
 		
 		// 返回結果
