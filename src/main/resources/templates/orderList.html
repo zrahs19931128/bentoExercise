@@ -1,42 +1,78 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>訂單管理</title>
-<link rel="stylesheet" type="text/css" href="themes/black/easyui.css">
-<link rel="stylesheet" type="text/css" href="themes/icon.css">
-<script type="text/javascript" src="jquery.min.js"></script>
-<script type="text/javascript" src="jquery.easyui.min.js"></script>
-<script src="locale/easyui-lang-zh_TW.js"></script>
+	<meta charset="UTF-8">
+	<title>訂單管理</title>
+	<link rel="stylesheet" type="text/css" href="themes/black/easyui.css">
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script src="locale/easyui-lang-zh_TW.js"></script>
+	<script type="text/javascript" src="datagrid-detailview.js"></script>
 </head>
+
 <body>
-<h2>訂單管理</h2>
-	
+	<h2>訂單管理</h2>
+
 	<div>
 		<div fit="true" class="easyui-layout" style="height:455px;">
-			
+
 			<div collapsible="false" region="west" split="true" title="選單列表" style="width:130px;">
 				<ul id="navigationTree"></ul>
 			</div>
-				
-			<div region="center" class="easyui-layout">
+
+			<div region="center" title="訂單列表" class="easyui-layout">
+				<table fit="true" toolbar="#tb" id="dg"  class="easyui-datagrid" fitColumns="true"
+					singleSelect="true" pagination="true" rownumbers="true" url="/queryOrderList">
+					<thead>
+						<tr>
+							<th field="orderAccount" width="50" align="center">訂購者帳號</th>
+							<th field="orderName" width="50" align="center">訂購者姓名</th>
+							<th field="orderNumber" width="50" align="center">訂單編號</th>
+							<th field="totalPrice" width="100" align="center">總金額</th>
+							<th field="orderTime" width="100" align="center">訂購時間</th>
+						</tr>
+					</thead>
+				</table>
 			</div>
-		</div>	
+		</div>
 	</div>
 </body>
+
 </html>
 
 <script type="text/javascript">
 
-$(function(){
-	// 动态添加菜单
-	
-	$("#navigationTree").tree({
-		url: "/menu/queryMenu",
-		onClick:function(node){
-			window.location.href=node.url;
+	$(function () {
+		// 动态添加菜单
+
+		$("#navigationTree").tree({
+			url: "/menu/queryMenu",
+			onClick: function (node) {
+				window.location.href = node.url;
+			}
+		});
+	});
+
+	$('#dg').datagrid({
+		view: detailview,
+		detailFormatter: function (index, row) {
+			return '<div class="ddv" style="padding:5px 0"></div>';
+		},
+		onExpandRow: function (index, row) {
+		console.log(row);
+			var ddv = $(this).datagrid('getRowDetail', index).find('div.ddv');
+			ddv.panel({
+				border: false,
+				cache: false,
+				href: '/queryOrderList?orderId=' + row.orderId,
+				onLoad: function () {
+					$('#dg').datagrid('fixDetailRowHeight', index);
+				}
+			});
+			$('#dg').datagrid('fixDetailRowHeight', index);
 		}
 	});
-});
 
 </script>

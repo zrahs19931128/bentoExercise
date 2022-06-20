@@ -24,7 +24,7 @@
 
 			<div region="center" class="easyui-layout">
 				<table fit="true" toolbar="#tb" id="dg" title="便當列表" class="easyui-datagrid" fitColumns="true"
-					singleSelect="false" pagination="true" rownumbers="true" url="/queryOrderBento" idField="menuId">
+					singleSelect="false" pagination="true" rownumbers="true" url="/queryOnShelfBento" idField="menuId">
 					<thead>
 						<tr>
 							<th field="id" checkbox="true" align="center"></th>
@@ -79,6 +79,7 @@
 		var rows = [];
 		var dataList = [];
 		dataList = $('#dg').datagrid('getChecked');
+		console.log(dataList);
 		for (var i = 0; i < dataList.length; i++) {
 			var row = {};
 			row.menuId = dataList[i].menuId;
@@ -91,8 +92,6 @@
 			rows.push(row);
 
 		}
-		console.log(JSON.stringify(rows[0]));
-		console.log(rows[0]);
 		$.ajax({
 			url: '/addOrderBento',
 			data: JSON.stringify(rows),

@@ -11,18 +11,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.service.BentoService;
+import com.example.demo.service.OrderService;
 import com.example.demo.vo.BentoOrderEditVo;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 public class OrderBentoController {
 
 	@Autowired
 	private BentoService bentoService;
+	
+	@Autowired
+	private OrderService orderService;
 	
 	@RequestMapping("/orderBento")
 	public String page(Model model) {
@@ -35,7 +37,7 @@ public class OrderBentoController {
 	 * @author sharz
 	 * 
 	 */
-	@RequestMapping("queryOrderBento")
+	@RequestMapping("queryOnShelfBento")
 	@ResponseBody
 	public Map<String, Object> queryBento(HttpServletRequest request) {
 		// 返回結果
@@ -53,6 +55,6 @@ public class OrderBentoController {
 	@ResponseBody
 	public Map<String, Object> addOrderBento(@RequestBody List<BentoOrderEditVo> param) throws ParseException {
 		// 返回結果
-		return bentoService.addOrderBento(param);
+		return orderService.addOrderBento(param);
 	}
 }

@@ -25,8 +25,9 @@ public class OrderDetailEntity {
 	@JoinColumn(name = "order_id")
 	private OrderListEntity orderListEntity;
 
-	@Column(name = "menu_id")
-	private int menuId;
+	@ManyToOne(cascade = CascadeType.ALL, optional = true)
+	@JoinColumn(name = "menu_id")
+	private BentoEntity bentoEntity;
 
 	@Column(name = "order_count")
 	private int orderCount;
@@ -53,12 +54,12 @@ public class OrderDetailEntity {
 		this.orderListEntity = orderListEntity;
 	}
 
-	public int getMenuId() {
-		return menuId;
+	public BentoEntity getBentoEntity() {
+		return bentoEntity;
 	}
 
-	public void setMenuId(int menuId) {
-		this.menuId = menuId;
+	public void setBentoEntity(BentoEntity bentoEntity) {
+		this.bentoEntity = bentoEntity;
 	}
 
 	public int getOrderCount() {
