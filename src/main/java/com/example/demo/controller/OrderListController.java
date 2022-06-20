@@ -52,8 +52,8 @@ public class OrderListController {
 	 */
 	@RequestMapping("queryOrderListDetail")
 	@ResponseBody
-	public OrderDetailVo queryOrderListDetail(@RequestParam("orderId") int orderId) throws ParseException {
+	public List<OrderDetailVo> queryOrderListDetail(@RequestParam("orderId") int orderId) throws ParseException {
 		// 返回結果
-		return null;
+		return orderService.queryOrderListDetail(orderId);
 	}
 }

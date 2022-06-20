@@ -23,8 +23,8 @@
 			</div>
 
 			<div region="center" title="訂單列表" class="easyui-layout">
-				<table fit="true" toolbar="#tb" id="dg"  class="easyui-datagrid" fitColumns="true"
-					singleSelect="true" pagination="true" rownumbers="true" url="/queryOrderList">
+				<table fit="true" toolbar="#tb" id="dg" class="easyui-datagrid" fitColumns="true" singleSelect="true"
+					pagination="true" rownumbers="true" url="/queryOrderList">
 					<thead>
 						<tr>
 							<th field="orderAccount" width="50" align="center">訂購者帳號</th>
@@ -54,25 +54,38 @@
 			}
 		});
 	});
+</script>
 
+<script th:inline=none type="text/javascript">
 	$('#dg').datagrid({
 		view: detailview,
 		detailFormatter: function (index, row) {
-			return '<div class="ddv" style="padding:5px 0"></div>';
+			return '<div style="padding:5px 0"><table class="ddv"></table></div>';
 		},
 		onExpandRow: function (index, row) {
-		console.log(row);
-			var ddv = $(this).datagrid('getRowDetail', index).find('div.ddv');
-			ddv.panel({
-				border: false,
-				cache: false,
-				href: '/queryOrderList?orderId=' + row.orderId,
-				onLoad: function () {
+			console.log(row);
+			var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
+			ddv.datagrid({
+				url: '/queryOrderListDetail?orderId=' + row.orderId,
+				fitColumns: true,
+				singleSelect: true,
+				rownumbers: true,
+				loadMsg: '讀取中...',
+				height: 'auto',
+				columns: [[
+					{field: 'productName', title: '品項名稱', width: 80},
+					{field: 'orderCount', title: '訂購數量', width: 60}
+				]],
+				onResize: function () {
 					$('#dg').datagrid('fixDetailRowHeight', index);
+				},
+				onLoadSuccess: function () {
+					setTimeout(function () {
+						$('#dg').datagrid('fixDetailRowHeight', index);
+					}, 0);
 				}
 			});
 			$('#dg').datagrid('fixDetailRowHeight', index);
 		}
 	});
-
 </script>

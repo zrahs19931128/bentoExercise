@@ -16,6 +16,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
@@ -254,23 +255,25 @@ public class OrderService {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		
 	    //select Member
-	    CriteriaQuery<OrderDetailEntity> query = cb.createQuery(OrderDetailEntity.class);
+	    CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
 	    
 	    //from member
-	    Root<OrderDetailEntity> detailEntityRoot = query.from(OrderDetailEntity.class);
-	    Join<OrderDetailEntity,OrderListEntity> join = detailEntityRoot.join("orderListEntity");
+	    Root<BentoEntity> bentoEntityRoot = query.from(BentoEntity.class);
+	    Join<BentoEntity,OrderDetailEntity> orderJoin = bentoEntityRoot.join("detailEntity", JoinType.LEFT);
+	    Join<OrderDetailEntity,OrderListEntity> bentoJoin = orderJoin.join("orderListEntity",JoinType.LEFT);
 	    
 	    //where accountName = :accountName
-	    Predicate predWhere = cb.equal(detailEntityRoot.get("orderId"), orderId);
+	    Predicate predWhere = cb.equal(bentoJoin.get("orderId"), orderId);
+	    query.select(cb.array(bentoEntityRoot.get("productName"), orderJoin.get("orderCount")));
 	    query.where(predWhere);
 	    
-	    TypedQuery<OrderDetailEntity> detailEntity = em.createQuery(query);
-	    List<OrderDetailEntity> dataList = detailEntity.getResultList();
-//	    List<OrderDetailVo> orderDetailVo = dataList.stream()
-//				.map(this::convertToDto)
-//				.collect(Collectors.toList());
+	    TypedQuery<Object[]> detailEntity = em.createQuery(query);
+	    List<Object[]> dataList = detailEntity.getResultList();
+	    List<OrderDetailVo> orderDetailVo = dataList.stream()
+				.map(this::convertToDto)
+				.collect(Collectors.toList());
 
-		return null;
+		return orderDetailVo;
 	}
 	
 	public OrderListVo convertToDto(OrderListEntity entity) {
@@ -281,6 +284,13 @@ public class OrderService {
 		dto.setOrderNumber(entity.getOrderNumber());
 		dto.setOrderTime(entity.getOrderTime());
 		dto.setTotalPrice(entity.getTotalPrice());
+		return dto;
+	}
+	
+	public OrderDetailVo convertToDto(Object[] object) {
+		OrderDetailVo dto = new OrderDetailVo();
+		dto.setProductName(object[0].toString());
+		dto.setOrderCount((int)object[1]);
 		return dto;
 	}
 }
