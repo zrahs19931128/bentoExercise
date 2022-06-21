@@ -11,8 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "member_author")
-public class MemberAuthorEntity {
+@Table(name = "author_menu")
+public class AuthorMenuEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +20,8 @@ public class MemberAuthorEntity {
 	private int id;
 	
 	@ManyToOne(cascade = CascadeType.ALL, optional = true)
-	@JoinColumn(name = "member_id")
-	private MemberEntity memberEntity;
+	@JoinColumn(name = "navigation_id")
+	private NavigationMenuEntity navigationMenuEntity;
 	
 	@ManyToOne(cascade = CascadeType.ALL, optional = true)
 	@JoinColumn(name = "author_id")
@@ -35,12 +35,12 @@ public class MemberAuthorEntity {
 		this.id = id;
 	}
 
-	public MemberEntity getMemberEntity() {
-		return memberEntity;
+	public NavigationMenuEntity getNavigationMenuEntity() {
+		return navigationMenuEntity;
 	}
 
-	public void setMemberEntity(MemberEntity memberEntity) {
-		this.memberEntity = memberEntity;
+	public void setNavigationMenuEntity(NavigationMenuEntity navigationMenuEntity) {
+		this.navigationMenuEntity = navigationMenuEntity;
 	}
 
 	public AuthorityEntity getAuthorityEntity() {

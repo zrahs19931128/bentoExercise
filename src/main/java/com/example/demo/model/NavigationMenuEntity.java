@@ -1,10 +1,16 @@
 package com.example.demo.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -30,6 +36,9 @@ public class NavigationMenuEntity {
 	
 	@Column(name = "url")
 	private String url;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "navigationMenuEntity")
+	private Set<AuthorMenuEntity> authorMenuEntity = new HashSet<AuthorMenuEntity>();
 
 	public int getId() {
 		return id;
@@ -77,6 +86,14 @@ public class NavigationMenuEntity {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Set<AuthorMenuEntity> getAuthorMenuEntity() {
+		return authorMenuEntity;
+	}
+
+	public void setAuthorMenuEntity(Set<AuthorMenuEntity> authorMenuEntity) {
+		this.authorMenuEntity = authorMenuEntity;
 	}
 
 	

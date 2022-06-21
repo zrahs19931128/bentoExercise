@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.model.AuthorityEntity;
 import com.example.demo.model.MemberAuthorEntity;
 import com.example.demo.model.MemberEntity;
+import com.example.demo.repos.AuthorityRepository;
 import com.example.demo.repos.MemberAuthorRepository;
 import com.example.demo.repos.MemberRepository;
 import com.example.demo.util.AuthorEnum;
@@ -46,19 +47,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class MemberService {
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
-	@Autowired
 	private HandleParamToMap handleParam;
-
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	private MemberRepository memberRepository;
 	
 	@Autowired
 	private MemberAuthorRepository memberAuthorRepository;
+	
+	@Autowired
+	private AuthorityRepository authorityRepository;
 	
 	@PersistenceContext
     EntityManager em;
@@ -127,7 +125,8 @@ public class MemberService {
 		String account_name = dto.getAccountName();
 		String member_name = dto.getMemberName();
 		String password = dto.getPassword();
-		int author = getAuthorId(dto.getAuthor());
+		AuthorityEntity authority = authorityRepository.findById(getAuthorId(dto.getAuthor())).get();
+//		int author = getAuthorId(dto.getAuthor());
 		
 		// 返回結果
 		Map<String, Object> resultMap = new HashMap();
@@ -170,13 +169,16 @@ public class MemberService {
 			entity.setMemberName(member_name);
 			entity.setPassword(password);
 			entity.setAddTime(new Date());
-			entity.setAuthorId(author);
-			memberRepository.save(entity);
+			entity.setAuthorityEntity(authority);
+			entity.setMemberAuthorEntity(null);
 			
 			MemberAuthorEntity memberAuthor = new MemberAuthorEntity();
-			memberAuthor.setAuthorId(author);
-			memberAuthor.setMemberId(entity.getId());
-			memberAuthorRepository.save(memberAuthor);
+			memberAuthor.setAuthorityEntity(authority);
+			memberAuthor.setMemberEntity(entity);
+			
+//			entity.setMemberAuthorEntity(memberAuthor);
+			memberRepository.save(entity);
+			
 		}catch(RuntimeException e) {
 			resultMap.put("errMsg", "新增失敗");
 		}
@@ -196,7 +198,8 @@ public class MemberService {
 		// params參數組合
 		String member_name = dto.getMemberName();
 		String password = dto.getPassword();
-		int author = getAuthorId(dto.getAuthor());
+		AuthorityEntity authority = authorityRepository.findById(getAuthorId(dto.getAuthor())).get();
+//		int author = getAuthorId(dto.getAuthor());
 
 		// 返回結果
 		Map<String, Object> resultMap = new HashMap();
@@ -226,14 +229,14 @@ public class MemberService {
 		password = passwordEncoder.encode(password);
 
 		entity.setUpdateTime(new Date());
-		entity.setAuthorId(author);
+		entity.setAuthorityEntity(authority);
 		entity.setMemberName(member_name);
 		entity.setPassword(password);
-		memberRepository.save(entity);
 		
 		MemberAuthorEntity memberAuthor = findMemberAuthor("memberId",entity.getId()).get(0);
-		memberAuthor.setAuthorId(author);
-		memberAuthorRepository.save(memberAuthor);
+		memberAuthor.setAuthorityEntity(authority);
+		memberAuthor.setMemberEntity(entity);
+		memberRepository.save(entity);
 		
 		return resultMap;
 	}
@@ -299,7 +302,7 @@ public class MemberService {
 		dto.setMemberName(entity.getMemberName());
 		dto.setAddTime(entity.getAddTime());
 		dto.setPassword(entity.getPassword());
-		dto.setAuthor(AuthorEnum.getAuthor(entity.getAuthorId()));
+		dto.setAuthor(AuthorEnum.getAuthor(entity.getAuthorityEntity().getId()));
 		return dto;
 	}
 }
