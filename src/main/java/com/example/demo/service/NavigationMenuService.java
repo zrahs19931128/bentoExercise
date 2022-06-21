@@ -73,7 +73,7 @@ public class NavigationMenuService {
 //						+ "left join member m on m.id = ma.member_id \n" + "where m.account_name  = ?",
 //				new Object[] { username },
 //				new BeanPropertyRowMapper<NavigationMenuEntity>(NavigationMenuEntity.class));
-		
+		System.out.println("");
 		List<NavigationMenuVo> menuDto = dataList.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
