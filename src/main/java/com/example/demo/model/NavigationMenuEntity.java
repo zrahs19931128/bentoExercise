@@ -22,16 +22,16 @@ public class NavigationMenuEntity {
 	@Column(name = "id")
 	private int id;
 	
-	@Column(name = "parentId")
+	@Column(name = "parentid")
 	private int parentId;
 	
 	@Column(name = "name")
 	private String name;
 	
-	@Column(name = "sortOrder")
+	@Column(name = "sortorder")
 	private int sortOrder;
 	
-	@Column(name = "isParent")
+	@Column(name = "isparent")
 	private int isParent;
 	
 	@Column(name = "url")
