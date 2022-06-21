@@ -53,10 +53,10 @@ public class NavigationMenuService {
 	    
 	    //from member
 	    Root<NavigationMenuEntity> navigationMenuRoot = query.from(NavigationMenuEntity.class);
-	    Join<NavigationMenuEntity,AuthorMenuEntity> navigationJoin = navigationMenuRoot.join("authorMenuEntity", JoinType.LEFT);
-	    Join<AuthorMenuEntity,AuthorityEntity> authorJoin = navigationJoin.join("authorityEntity",JoinType.LEFT);
-	    Join<AuthorityEntity,MemberAuthorEntity> memberAuthorJoin = authorJoin.join("memberAuthorEntity",JoinType.LEFT);
-	    Join<MemberAuthorEntity,MemberEntity> memberJoin = memberAuthorJoin.join("authorityEntity",JoinType.LEFT);
+	    Join<AuthorMenuEntity,NavigationMenuEntity> navigationJoin = navigationMenuRoot.join("authorMenuEntity", JoinType.LEFT);
+	    Join<AuthorityEntity,AuthorMenuEntity> authorJoin = navigationJoin.join("authorityEntity",JoinType.LEFT);
+	    Join<MemberAuthorEntity,AuthorityEntity> memberAuthorJoin = authorJoin.join("memberAuthorEntity",JoinType.LEFT);
+	    Join<MemberEntity,MemberAuthorEntity> memberJoin = memberAuthorJoin.join("authorityEntity",JoinType.LEFT);
 	    
 	    //where accountName = :accountName
 	    Predicate predWhere = cb.equal(memberJoin.get("accountName"), username);

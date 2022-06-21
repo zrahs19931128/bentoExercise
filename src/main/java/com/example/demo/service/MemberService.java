@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -171,10 +173,13 @@ public class MemberService {
 			entity.setAddTime(new Date());
 			entity.setAuthorityEntity(authority);
 			
+			List<MemberAuthorEntity> authorList = new ArrayList<>();
 			MemberAuthorEntity memberAuthor = new MemberAuthorEntity();
 			memberAuthor.setAuthorityEntity(authority);
+			memberAuthor.setMemberEntity(entity);
+			authorList.add(memberAuthor);
 			
-			entity.addMemberAuthor(memberAuthor);
+			entity.setMemberAuthorEntity(authorList);
 			memberRepository.save(entity);
 			
 		}catch(RuntimeException e) {
@@ -231,9 +236,11 @@ public class MemberService {
 		entity.setMemberName(member_name);
 		entity.setPassword(password);
 		
-		MemberAuthorEntity memberAuthor = findMemberAuthor("memberId",entity.getId()).get(0);
-		memberAuthor.setAuthorityEntity(authority);
-		memberAuthor.setMemberEntity(entity);
+//		MemberAuthorEntity memberAuthor = findMemberAuthor("memberId",entity.getId()).get(0);
+		List<MemberAuthorEntity> memberAuthor = entity.getMemberAuthorEntity();
+		memberAuthor.get(0).setAuthorityEntity(authority);
+		
+		entity.setMemberAuthorEntity(memberAuthor);
 		memberRepository.save(entity);
 		
 		return resultMap;

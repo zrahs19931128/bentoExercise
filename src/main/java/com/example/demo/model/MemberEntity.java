@@ -48,7 +48,7 @@ public class MemberEntity {
 	private Date updateTime;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "memberEntity")
-	private Set<MemberAuthorEntity> memberAuthorEntity = new HashSet<MemberAuthorEntity>();
+	private List<MemberAuthorEntity> memberAuthorEntity;
 
 	public int getId() {
 		return id;
@@ -106,18 +106,19 @@ public class MemberEntity {
 		this.updateTime = updateTime;
 	}
 
-	public Set<MemberAuthorEntity> getMemberAuthorEntity() {
+	public List<MemberAuthorEntity> getMemberAuthorEntity() {
 		return memberAuthorEntity;
 	}
 
-	public void setMemberAuthorEntity(Set<MemberAuthorEntity> memberAuthorEntity) {
+	public void setMemberAuthorEntity(List<MemberAuthorEntity> memberAuthorEntity) {
 		this.memberAuthorEntity = memberAuthorEntity;
 	}
+
 	
-	public void addMemberAuthor(MemberAuthorEntity memberAuthorEntity) {
-		if (!this.memberAuthorEntity.contains(memberAuthorEntity)) {
-			this.memberAuthorEntity.add(memberAuthorEntity);
-			memberAuthorEntity.setMemberEntity(this);;
-		}
-	}
+//	public void addMemberAuthor(MemberAuthorEntity memberAuthorEntity) {
+//		if (!this.memberAuthorEntity.contains(memberAuthorEntity)) {
+//			this.memberAuthorEntity.add(memberAuthorEntity);
+//			memberAuthorEntity.setMemberEntity(this);;
+//		}
+//	}
 }
