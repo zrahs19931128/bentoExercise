@@ -1,13 +1,10 @@
 package com.example.demo.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,13 +16,11 @@ public class MemberAuthorEntity {
 	@Column(name = "id")
 	private int id;
 	
-	@ManyToOne(cascade = CascadeType.ALL, optional = true)
-	@JoinColumn(name = "member_id")
-	private MemberEntity memberEntity;
+	@Column(name = "member_id")
+	private int memberId;
 	
-	@ManyToOne(cascade = CascadeType.ALL, optional = true)
-	@JoinColumn(name = "author_id")
-	private AuthorityEntity authorityEntity;
+	@Column(name = "author_id")
+	private int authorId;
 
 	public int getId() {
 		return id;
@@ -35,19 +30,19 @@ public class MemberAuthorEntity {
 		this.id = id;
 	}
 
-	public MemberEntity getMemberEntity() {
-		return memberEntity;
+	public int getMemberId() {
+		return memberId;
 	}
 
-	public void setMemberEntity(MemberEntity memberEntity) {
-		this.memberEntity = memberEntity;
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
 	}
 
-	public AuthorityEntity getAuthorityEntity() {
-		return authorityEntity;
+	public int getAuthorId() {
+		return authorId;
 	}
 
-	public void setAuthorityEntity(AuthorityEntity authorityEntity) {
-		this.authorityEntity = authorityEntity;
+	public void setAuthorId(int authorId) {
+		this.authorId = authorId;
 	}
 }

@@ -1,20 +1,13 @@
 package com.example.demo.model;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -37,18 +30,14 @@ public class MemberEntity {
 	@Column(name = "password")
 	private String password;
 	
-	@ManyToOne(cascade = CascadeType.ALL, optional = true)
-	@JoinColumn(name = "author_id")
-	private AuthorityEntity authorityEntity;
+	@Column(name = "author_id")
+	private int authorId;
 	
 	@Column(name = "add_time")
 	private Date addTime;
 	
 	@Column(name = "update_time")
 	private Date updateTime;
-	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "memberEntity")
-	private Set<MemberAuthorEntity> memberAuthorEntity = new HashSet<MemberAuthorEntity>();
 
 	public int getId() {
 		return id;
@@ -82,12 +71,12 @@ public class MemberEntity {
 		this.password = password;
 	}
 
-	public AuthorityEntity getAuthorityEntity() {
-		return authorityEntity;
+	public int getAuthorId() {
+		return authorId;
 	}
 
-	public void setAuthorityEntity(AuthorityEntity authorityEntity) {
-		this.authorityEntity = authorityEntity;
+	public void setAuthorId(int authorId) {
+		this.authorId = authorId;
 	}
 
 	public Date getAddTime() {
@@ -105,12 +94,6 @@ public class MemberEntity {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-
-	public Set<MemberAuthorEntity> getMemberAuthorEntity() {
-		return memberAuthorEntity;
-	}
-
-	public void setMemberAuthorEntity(Set<MemberAuthorEntity> memberAuthorEntity) {
-		this.memberAuthorEntity = memberAuthorEntity;
-	}
+	
+	
 }
