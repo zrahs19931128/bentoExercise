@@ -113,4 +113,11 @@ public class MemberEntity {
 	public void setMemberAuthorEntity(Set<MemberAuthorEntity> memberAuthorEntity) {
 		this.memberAuthorEntity = memberAuthorEntity;
 	}
+	
+	public void addMemberAuthor(MemberAuthorEntity memberAuthorEntity) {
+		if (!this.memberAuthorEntity.contains(memberAuthorEntity)) {
+			this.memberAuthorEntity.add(memberAuthorEntity);
+			memberAuthorEntity.setMemberEntity(this);;
+		}
+	}
 }

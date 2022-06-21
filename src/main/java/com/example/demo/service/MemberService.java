@@ -170,13 +170,11 @@ public class MemberService {
 			entity.setPassword(password);
 			entity.setAddTime(new Date());
 			entity.setAuthorityEntity(authority);
-			entity.setMemberAuthorEntity(null);
 			
 			MemberAuthorEntity memberAuthor = new MemberAuthorEntity();
 			memberAuthor.setAuthorityEntity(authority);
-			memberAuthor.setMemberEntity(entity);
 			
-//			entity.setMemberAuthorEntity(memberAuthor);
+			entity.addMemberAuthor(memberAuthor);
 			memberRepository.save(entity);
 			
 		}catch(RuntimeException e) {
