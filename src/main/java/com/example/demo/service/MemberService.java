@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -18,14 +17,11 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,9 +49,6 @@ public class MemberService {
 
 	@Autowired
 	private MemberRepository memberRepository;
-	
-	@Autowired
-	private MemberAuthorRepository memberAuthorRepository;
 	
 	@Autowired
 	private AuthorityRepository authorityRepository;
@@ -202,7 +195,6 @@ public class MemberService {
 		String member_name = dto.getMemberName();
 		String password = dto.getPassword();
 		AuthorityEntity authority = authorityRepository.findById(getAuthorId(dto.getAuthor())).get();
-//		int author = getAuthorId(dto.getAuthor());
 
 		// 返回結果
 		Map<String, Object> resultMap = new HashMap();
@@ -229,7 +221,9 @@ public class MemberService {
 		}
 
 		// 密碼加密
-		password = passwordEncoder.encode(password);
+		if(!password.equals(entity.getPassword())) {
+			password = passwordEncoder.encode(password);
+		}
 
 		entity.setUpdateTime(new Date());
 		entity.setAuthorityEntity(authority);

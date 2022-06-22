@@ -1,30 +1,24 @@
 package com.example.demo.controller;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.model.BentoEntity;
 import com.example.demo.service.BentoService;
-import com.example.demo.util.HandleParamToMap;
 import com.example.demo.vo.BentoSearchVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
+@RequestMapping("/bento")
 public class BentoController {
 
 	@Autowired

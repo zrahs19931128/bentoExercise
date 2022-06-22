@@ -4,12 +4,15 @@
 <head>
 	<meta charset="UTF-8">
 	<title>訂購便當</title>
-	<link rel="stylesheet" type="text/css" href="themes/black/easyui.css">
-	<link rel="stylesheet" type="text/css" href="themes/icon.css">
-	<script type="text/javascript" src="jquery.min.js"></script>
-	<script type="text/javascript" src="jquery.easyui.min.js"></script>
-	<script src="locale/easyui-lang-zh_TW.js"></script>
-	<script type="text/javascript" src="datagrid-cellediting.js"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/themes/black/easyui.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/themes/icon.css}">
+	<script type="text/javascript" th:src="@{/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/jquery.easyui.min.js}"></script>
+	<script th:src="@{/locale/easyui-lang-zh_TW.js}"></script>
+	<script type="text/javascript" th:src="@{/datagrid-cellediting.js}"></script>
+	<script th:inline="javascript">
+	    const contextPath = /*[[@{/}]]*/''
+	</script>
 </head>
 
 <body>
@@ -24,7 +27,7 @@
 
 			<div region="center" class="easyui-layout">
 				<table fit="true" toolbar="#tb" id="dg" title="便當列表" class="easyui-datagrid" fitColumns="true"
-					singleSelect="false" pagination="true" rownumbers="true" url="/queryOnShelfBento" idField="menuId">
+					singleSelect="false" pagination="true" rownumbers="true" th:url="@{/purchase/queryOnShelfBento}" idField="menuId">
 					<thead>
 						<tr>
 							<th field="id" checkbox="true" align="center"></th>
@@ -94,7 +97,7 @@
 		console.log(JSON.stringify(rows[0]));
 		console.log(rows[0]);
 		$.ajax({
-			url: '/addOrderBento',
+			url: contextPath + 'purchase/addOrderBento',
 			data: JSON.stringify(rows),
 			type: 'put',
 			dataType: 'json',
@@ -116,9 +119,9 @@
 		// 动态添加菜单
 
 		$("#navigationTree").tree({
-			url: "/menu/queryMenu",
+			url: contextPath + "menu/queryMenu",
 			onClick: function (node) {
-				window.location.href = node.url;
+				window.location.href = contextPath + node.url;
 			}
 		});
 	});

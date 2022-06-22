@@ -19,6 +19,7 @@ import com.example.demo.vo.BentoOrderEditVo;
 import com.example.demo.vo.OrderDetailVo;
 
 @Controller
+@RequestMapping("/order")
 public class OrderListController {
 
 	@Autowired

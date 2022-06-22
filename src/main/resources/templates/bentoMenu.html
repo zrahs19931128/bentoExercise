@@ -4,11 +4,14 @@
 <head>
 	<meta charset="UTF-8">
 	<title>便當管理</title>
-	<link rel="stylesheet" type="text/css" href="themes/black/easyui.css">
-	<link rel="stylesheet" type="text/css" href="themes/icon.css">
-	<script type="text/javascript" src="jquery.min.js"></script>
-	<script type="text/javascript" src="jquery.easyui.min.js"></script>
-	<script src="locale/easyui-lang-zh_TW.js"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/themes/black/easyui.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/themes/icon.css}">
+	<script type="text/javascript" th:src="@{/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/jquery.easyui.min.js}"></script>
+	<script th:src="@{/locale/easyui-lang-zh_TW.js}"></script>
+	<script th:inline="javascript">
+	    const contextPath = /*[[@{/}]]*/''
+	</script>
 </head>
 
 <body>
@@ -23,7 +26,7 @@
 
 			<div region="center" class="easyui-layout">
 				<table fit="true" toolbar="#tb" id="dg" title="便當列表" class="easyui-datagrid" fitColumns="true"
-					singleSelect="true" pagination="true" rownumbers="true" url="/queryBento">
+					singleSelect="true" pagination="true" rownumbers="true" th:url="@{/bento/queryBento}">
 					<thead>
 						<tr>
 							<th field="id" checkbox="true" align="center"></th>
@@ -187,7 +190,7 @@
 	function addBento() {
 
 		$.ajax({
-			url: '/addBento',
+			url: contextPath + 'bento/addBento',
 			data: $("#bentoForm").serialize(),
 			type: 'put',
 			dataType: 'json',
@@ -205,7 +208,7 @@
 
 	function editBento() {
 		$.ajax({
-			url: '/editBento',
+			url: contextPath + 'bento/editBento',
 			data: $("#fm").serialize(),
 			type: 'put',
 			dataType: 'json',
@@ -223,7 +226,7 @@
 
 	function searchBento() {
 		$.ajax({
-			url: '/searchBento',
+			url: contextPath + 'bento/searchBento',
 			data: $("#searchForm").serialize(),
 			type: 'put',
 			dataType: 'json',
@@ -251,9 +254,9 @@
 		// 动态添加菜单
 
 		$("#navigationTree").tree({
-			url: "/menu/queryMenu",
+			url: contextPath + "menu/queryMenu",
 			onClick: function (node) {
-				window.location.href = node.url;
+				window.location.href = contextPath + node.url;
 			}
 		});
 	});

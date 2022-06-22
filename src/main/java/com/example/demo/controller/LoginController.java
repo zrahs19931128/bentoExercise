@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/bentoExercise")
 public class LoginController {
 
 	private Authentication auth;
@@ -28,11 +29,6 @@ public class LoginController {
 		}
 
 		return "login";
-	}
-
-	@RequestMapping("/testLogin")
-	public String test_Login() {
-		return "test_Login";
 	}
 
 	@RequestMapping("/auth/home")

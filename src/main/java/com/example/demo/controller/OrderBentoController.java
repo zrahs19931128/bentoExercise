@@ -18,6 +18,7 @@ import com.example.demo.service.OrderService;
 import com.example.demo.vo.BentoOrderEditVo;
 
 @Controller
+@RequestMapping("/purchase")
 public class OrderBentoController {
 
 	@Autowired

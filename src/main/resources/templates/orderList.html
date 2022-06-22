@@ -4,12 +4,15 @@
 <head>
 	<meta charset="UTF-8">
 	<title>訂單管理</title>
-	<link rel="stylesheet" type="text/css" href="themes/black/easyui.css">
-	<link rel="stylesheet" type="text/css" href="themes/icon.css">
-	<script type="text/javascript" src="jquery.min.js"></script>
-	<script type="text/javascript" src="jquery.easyui.min.js"></script>
-	<script src="locale/easyui-lang-zh_TW.js"></script>
-	<script type="text/javascript" src="datagrid-detailview.js"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/themes/black/easyui.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/themes/icon.css}">
+	<script type="text/javascript" th:src="@{/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/jquery.easyui.min.js}"></script>
+	<script th:src="@{/locale/easyui-lang-zh_TW.js}"></script>
+	<script type="text/javascript" th:src="@{/datagrid-detailview.js}"></script>
+	<script th:inline="javascript">
+	    const contextPath = /*[[@{/}]]*/''
+	</script>
 </head>
 
 <body>
@@ -24,7 +27,7 @@
 
 			<div region="center" title="訂單列表" class="easyui-layout">
 				<table fit="true" toolbar="#tb" id="dg" class="easyui-datagrid" fitColumns="true" singleSelect="true"
-					pagination="true" rownumbers="true" url="/queryOrderList">
+					pagination="true" rownumbers="true" th:url="@{/order/queryOrderList}">
 					<thead>
 						<tr>
 							<th field="orderAccount" width="50" align="center">訂購者帳號</th>
@@ -48,15 +51,16 @@
 		// 动态添加菜单
 
 		$("#navigationTree").tree({
-			url: "/menu/queryMenu",
+			url: contextPath + "menu/queryMenu",
 			onClick: function (node) {
-				window.location.href = node.url;
+				window.location.href = contextPath + node.url;
 			}
 		});
 	});
 </script>
 
 <script th:inline=none type="text/javascript">
+    
 	$('#dg').datagrid({
 		view: detailview,
 		detailFormatter: function (index, row) {
@@ -65,8 +69,9 @@
 		onExpandRow: function (index, row) {
 			console.log(row);
 			var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
+			console.log(contextPath)
 			ddv.datagrid({
-				url: '/queryOrderListDetail?orderId=' + row.orderId,
+				url: contextPath + 'order/queryOrderListDetail?orderId=' + row.orderId,
 				fitColumns: true,
 				singleSelect: true,
 				rownumbers: true,

@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>帳號管理</title>
-<link rel="stylesheet" type="text/css" href="themes/black/easyui.css">
-<link rel="stylesheet" type="text/css" href="themes/icon.css">
-<script type="text/javascript" src="jquery.min.js"></script>
-<script type="text/javascript" src="jquery.easyui.min.js"></script>
-<script src="locale/easyui-lang-zh_TW.js"></script>
-</head>
+	<meta charset="UTF-8">
+	<title>帳號管理</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/themes/black/easyui.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/themes/icon.css}">
+	<script type="text/javascript" th:src="@{/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/jquery.easyui.min.js}"></script>
+	<script th:src="@{/locale/easyui-lang-zh_TW.js}"></script>
+	<script th:inline="javascript">
+		    const contextPath = /*[[@{/}]]*/''
+		</script>
+	</head>
 <body>
 <h2>帳號管理</h2>
 <div>
@@ -20,7 +24,8 @@
 				</div>
 				
 				<div region="center" class="easyui-layout">
-					<table id="dg" fit="true" title="帳號列表" class="easyui-datagrid" toolbar="#tb" fitColumns="true" singleSelect="true" pagination="true" rownumbers="true" url="queryMembers" >
+					<table id="dg" fit="true" title="帳號列表" class="easyui-datagrid" toolbar="#tb" fitColumns="true"
+						singleSelect="true" pagination="true" rownumbers="true" th:url="@{/member/queryMembers}" >
 						<thead>
 						<tr>
 							<th field="id" checkbox="true" align="center"></th>
@@ -131,7 +136,7 @@ $('#dlg').window('close');
 function addMember() {
 	
 	$.ajax({
-		url: '/addMember',
+		url: contextPath + 'member/addMember',
 		data: $("#userForm").serialize(),
 		type: 'put',
 		dataType: 'json',
@@ -158,7 +163,7 @@ function openEditWin(){
 
 function editMember(){
 	$.ajax({
-		url: '/editMember',
+		url: contextPath + 'member/editMember',
 		data: $("#fm").serialize(),
 		type: 'put',
 		dataType: 'json',
@@ -186,9 +191,9 @@ $(function(){
 	// 动态添加菜单
 	
 	$("#navigationTree").tree({
-		url: "/menu/queryMenu",
+		url: contextPath + "menu/queryMenu",
 		onClick:function(node){
-			window.location.href=node.url;
+			window.location.href = contextPath + node.url;
 		}
 	});
 });
