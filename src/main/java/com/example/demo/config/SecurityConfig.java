@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.demo.service.BentoUserDetailsService;
+import com.example.demo.util.AuthorEnum;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +27,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 
 		httpSecurity.authorizeRequests() // 認證機制設置
-				.anyRequest().authenticated() // 除了以上的 URL 外, 都需要認證才可以訪問
+				.antMatchers("/bento/**").hasAnyAuthority(AuthorEnum.ADMIN.getAuthor()).antMatchers("/order/**")
+				.hasAnyAuthority(AuthorEnum.ADMIN.getAuthor()).antMatchers("/member/**")
+				.hasAnyAuthority(AuthorEnum.ADMIN.getAuthor()).antMatchers("/purchase/**")
+				.hasAnyAuthority(AuthorEnum.ADMIN.getAuthor(), AuthorEnum.NORMAL.getAuthor()).anyRequest()
+				.authenticated() // 除了以上的 URL 外, 都需要認證才可以訪問
 				.and().formLogin()
 //		    .loginPage("/login") // 認證頁面指向頁頁
 				.defaultSuccessUrl("/purchase/orderBento").permitAll().and().logout().permitAll();
