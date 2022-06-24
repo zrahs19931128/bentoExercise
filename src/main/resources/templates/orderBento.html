@@ -11,15 +11,26 @@
 	<script th:src="@{/locale/easyui-lang-zh_TW.js}"></script>
 	<script type="text/javascript" th:src="@{/datagrid-cellediting.js}"></script>
 	<script th:inline="javascript">
-	    const contextPath = /*[[@{/}]]*/''
+		const contextPath = /*[[@{/}]]*/''
 	</script>
 </head>
 
 <body>
-	<h2>訂購便當</h2>
-
 	<div>
-		<div fit="true" class="easyui-layout" style="height:455px;">
+		<div fit="true" class="easyui-layout" style="height:520px;">
+
+			<div height="65px" data-options="region:'north', border:false">
+				<div id="div1">
+					<img alt="dinbendon sticker" th:src="@{/images/logo_orderbento.png}" />
+				</div>
+				<div id="div2">
+					<span>使用者：</span>
+					<span th:text="${#authentication.name}"></span>
+					<span>角色：</span>
+					<span th:text="${#authentication.principal.authorities}"></span>
+					<a th:href="@{/logout}" class="easyui-linkbutton" icon="icon-logout">登出</a>
+				</div>
+			</div>
 
 			<div collapsible="false" region="west" split="true" title="選單列表" style="width:130px;">
 				<ul id="navigationTree"></ul>
@@ -27,7 +38,8 @@
 
 			<div region="center" class="easyui-layout">
 				<table fit="true" toolbar="#tb" id="dg" title="便當列表" class="easyui-datagrid" fitColumns="true"
-					singleSelect="false" pagination="true" rownumbers="true" th:url="@{/purchase/queryOnShelfBento}" idField="menuId">
+					singleSelect="false" pagination="true" rownumbers="true" th:url="@{/purchase/queryOnShelfBento}"
+					idField="menuId">
 					<thead>
 						<tr>
 							<th field="id" checkbox="true" align="center"></th>
@@ -94,8 +106,7 @@
 			rows.push(row);
 
 		}
-		console.log(JSON.stringify(rows[0]));
-		console.log(rows[0]);
+
 		$.ajax({
 			url: contextPath + 'purchase/addOrderBento',
 			data: JSON.stringify(rows),
@@ -114,7 +125,7 @@
 			}
 		});
 	}
-	
+
 	$(function () {
 		// 动态添加菜单
 
@@ -133,7 +144,7 @@
 	function search() {
 		$('#dg').datagrid('load', {});
 	}
-	
+
 	$(function () {
 		$('#dg').datagrid('enableCellEditing').datagrid('gotoCell', {
 			index: 0,
@@ -141,3 +152,17 @@
 		});
 	});
 </script>
+
+<style type="text/css">
+	#div1 {
+		float: left;
+		padding: 10px;
+		margin-right: 8px;
+	}
+
+	#div2 {
+		float: right;
+		padding: 15px;
+		margin-right: 10px;
+	}
+</style>

@@ -268,8 +268,26 @@ public class BentoService {
 		int pageSize = Integer.parseInt(params.get("rows").toString());
 
 		Pageable pageable = PageRequest.of(page-1, pageSize,Sort.Direction.DESC,"addTime");
-		List<BentoEntity> onShelfList = findBento("shelfStatus","1");
-		Page<BentoEntity> pageList = new PageImpl<BentoEntity>(onShelfList,pageable,onShelfList.size());
+		
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		
+	    //select Member
+	    CriteriaQuery<BentoEntity> query = cb.createQuery(BentoEntity.class);
+	    
+	    //from member
+	    Root<BentoEntity> bentoEntityRoot = query.from(BentoEntity.class);
+	    
+	    //where column = :value
+	    Predicate predWhere = cb.equal(bentoEntityRoot.get("shelfStatus"), 1);
+        query.where(predWhere);
+        
+        TypedQuery<BentoEntity> bentoEntity = em.createQuery(query);
+        bentoEntity.setFirstResult((page-1)*pageSize);
+        bentoEntity.setMaxResults(pageSize);
+        
+		List<BentoEntity> onShelfList = em.createQuery(query).getResultList();
+		
+		Page<BentoEntity> pageList = new PageImpl<BentoEntity>(bentoEntity.getResultList(),pageable,onShelfList.size());
 		
 		//將數據轉為List
 		List<BentoEntity> dataList = pageList.getContent();
