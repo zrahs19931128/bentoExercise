@@ -42,7 +42,7 @@
 					<thead>
 						<tr>
 							<th field="id" checkbox="true" align="center"></th>
-							<th field="productName" width="50" align="center">品名</th>
+							<th field="productName" width="100" align="center">品名</th>
 							<th field="price" width="100" align="center">價格</th>
 							<th formatter="formatShelf" field="shelfStatus" width="200" align="center">上/下架</th>
 							<th field="sellDay" width="200" align="center">每日可販賣總數量</th>
@@ -162,10 +162,30 @@
 </div>
 
 <div id="tb">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="openAddWin()">新增</a>
-	<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="openEditWin()">編輯</a>
-	<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="openSearchWin()">進階查詢</a>
-	<a id="search" class="easyui-linkbutton" iconCls="icon-reload" plain="true">更新</a>
+	<form id="searchtb">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="openAddWin()">新增</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="openEditWin()">編輯</a>
+		<!--<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="openSearchWin()">進階查詢</a>-->
+		<a id="search" class="easyui-linkbutton" iconCls="icon-reload" plain="true">更新</a>
+		<tr>
+			<td>便當品名 :</td>
+			<td><input id="productName" name="productName" class="easyui-textbox"></td>
+		</tr>
+		<tr>
+			<td>建立日期 :</td>
+			<td> <input id="startTime" data-options="prompt:'開始時間'" name="startTime" class="easyui-datebox"> ~ <input
+					id="endTime" data-options="prompt:'結束時間'" name="endTime" class="easyui-datebox"></td>
+		</tr>
+		<tr>
+			<td align="right">狀態 :</td>
+			<td><select id="shelfStatus" class="easyui-combobox" name="shelfStatus" style="width:148px;">
+					<option selected="selected" value=""></option>
+					<option value="1">上架</option>
+					<option value="0">下架</option>
+				</select></td>
+		</tr>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="doSearch()">查詢</a>
+	</form>
 </div>
 
 </html>
@@ -259,6 +279,7 @@
 	}
 
 	function search() {
+		$('#searchtb').form('clear')
 		$('#dg').datagrid('load', {});
 	}
 
@@ -283,6 +304,15 @@
 	$('#search').click(function () {
 		search();
 	});
+
+	function doSearch() {
+		$('#dg').datagrid('load', {
+			productName: $('#productName').val(),
+			startTime: $('#startTime').val(),
+			endTime: $('#endTime').val(),
+			shelfStatus: $('#shelfStatus').val()
+		});
+	}
 
 </script>
 

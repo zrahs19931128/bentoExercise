@@ -61,15 +61,61 @@ public class BentoService {
 	@PersistenceContext
     EntityManager em;
 
-	public Map<String, Object> queryBento(HttpServletRequest request) {
+	public Map<String, Object> queryBento(HttpServletRequest request) throws ParseException {
 
 		// request參數組合
 		Map<String, Object> params = handleParam.handleParamToMap(request);
+		String productName = (String)params.get("productName");
+		String startTime = (String)params.get("startTime");
+		String endTime = (String)params.get("endTime");
+		String shelfStatus = (String)params.get("shelfStatus");
 		int page = Integer.parseInt(params.get("page").toString());
 		int pageSize = Integer.parseInt(params.get("rows").toString());
 
 		Pageable pageable = PageRequest.of(page-1, pageSize,Sort.Direction.DESC,"addTime");
-		Page<BentoEntity> pageList = bentoRepository.findAll(pageable);
+		
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		
+	    //select Member
+	    CriteriaQuery<BentoEntity> query = cb.createQuery(BentoEntity.class);
+	    
+	    //from member
+	    Root<BentoEntity> bentoEntityRoot = query.from(BentoEntity.class);
+	    
+		//where accountName = :accountName
+	    List<Predicate> predWhere = new ArrayList<Predicate>();
+	    if( productName !=null && productName.length() > 0 ) {
+	    	predWhere.add(cb.like(bentoEntityRoot.get("productName"),"%"+productName+"%"));
+	    }
+	    
+	    if( startTime !=null && startTime.length() > 0 ) {
+	    	Date startDate = timeFormat.parse(startTime+" 00:00:00");
+	    	predWhere.add(cb.greaterThanOrEqualTo(bentoEntityRoot.get("addTime"), startDate));
+	    }
+	    
+	    if( endTime !=null && endTime.length() > 0) {
+	    	Date endDate = timeFormat.parse(endTime+" 23:59:59");
+	    	predWhere.add(cb.lessThanOrEqualTo(bentoEntityRoot.get("addTime"), endDate));
+	    }
+	    
+	    if( shelfStatus !=null && shelfStatus.length() > 0) {
+	    	predWhere.add(cb.equal(bentoEntityRoot.get("shelfStatus"), shelfStatus));
+	    }
+	    
+	    if(!predWhere.isEmpty()) {	    	
+	    	query.where(predWhere.toArray(new Predicate[] {}));
+	    }
+	    
+        Order orderByIdDesc = cb.desc(bentoEntityRoot.get("addTime"));
+        query.orderBy(orderByIdDesc);
+        
+	    TypedQuery<BentoEntity> bentoEntity = em.createQuery(query);
+        bentoEntity.setFirstResult((page-1)*pageSize);
+        bentoEntity.setMaxResults(pageSize);
+        
+        List<BentoEntity> searchList = em.createQuery(query).getResultList();
+		
+		Page<BentoEntity> pageList = new PageImpl<BentoEntity>(bentoEntity.getResultList(),pageable,searchList.size());
 		
 		//將數據轉為List
 		List<BentoEntity> dataList = pageList.getContent();
@@ -193,67 +239,6 @@ public class BentoService {
 	
 	/**
 	 * 
-	 * @進階查詢便當
-	 * @Date 2022/06/15
-	 * @author sharz
-	 * @throws JsonProcessingException 
-	 * 
-	 */
-	public Map<String, Object> searchBento(BentoSearchVo param) throws ParseException{
-		
-		String productName = param.getProductName();
-		String startTime = param.getStartTime();
-		String endTime = param.getEndTime();
-		String shelfStatus = param.getShelfStatus();
-		
-		CriteriaBuilder cb = em.getCriteriaBuilder();
-		
-	    //select Member
-	    CriteriaQuery<BentoEntity> query = cb.createQuery(BentoEntity.class);
-	    
-	    //from member
-	    Root<BentoEntity> bentoEntityRoot = query.from(BentoEntity.class);
-	    
-	    //where accountName = :accountName
-	    List<Predicate> predWhere = new ArrayList<Predicate>();
-	    if(productName.length() > 0 ) {
-	    	predWhere.add(cb.like(bentoEntityRoot.get("productName"),"%"+productName+"%"));
-	    }
-	    
-	    if(startTime.length() > 0 ) {
-	    	Date startDate = timeFormat.parse(startTime+" 00:00:00");
-	    	predWhere.add(cb.greaterThanOrEqualTo(bentoEntityRoot.get("addTime"), startDate));
-	    }
-	    
-	    if(endTime.length() > 0) {
-	    	Date endDate = timeFormat.parse(endTime+" 23:59:59");
-	    	predWhere.add(cb.lessThanOrEqualTo(bentoEntityRoot.get("addTime"), endDate));
-	    }
-	    
-	    if(shelfStatus.length() > 0) {
-	    	predWhere.add(cb.equal(bentoEntityRoot.get("shelfStatus"), shelfStatus));
-	    }
-	    
-	    Order orderByIdDesc = cb.desc(bentoEntityRoot.get("addTime"));
-	    
-        query.where(predWhere.toArray(new Predicate[] {}));
-        query.orderBy(orderByIdDesc);
-        
-        TypedQuery<BentoEntity> bentoEntity = em.createQuery(query);
-        
-        List<BentoVo> bentoDto = bentoEntity.getResultList().stream()
-				.map(this::convertToDto)
-				.collect(Collectors.toList());
-        
-        Map<String, Object> resultMap = new HashMap();
-        resultMap.put("total", bentoDto.size());
-        resultMap.put("rows", bentoDto);
-        
-		return resultMap;
-	}
-	
-	/**
-	 * 
 	 * @查詢上架便當
 	 * @Date 2022/06/14
 	 * @author sharz
@@ -280,6 +265,9 @@ public class BentoService {
 	    //where column = :value
 	    Predicate predWhere = cb.equal(bentoEntityRoot.get("shelfStatus"), 1);
         query.where(predWhere);
+        
+        Order orderByIdDesc = cb.desc(bentoEntityRoot.get("addTime"));
+        query.orderBy(orderByIdDesc);
         
         TypedQuery<BentoEntity> bentoEntity = em.createQuery(query);
         bentoEntity.setFirstResult((page-1)*pageSize);

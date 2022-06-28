@@ -33,12 +33,13 @@ public class BentoController {
 	 * @查詢全部便當
 	 * @Date 2022/06/08
 	 * @author sharz
+	 * @throws ParseException 
 	 * @throws JsonProcessingException 
 	 * 
 	 */
 	@RequestMapping("queryBento")
 	@ResponseBody
-	public Map<String, Object> queryBento(HttpServletRequest request) {
+	public Map<String, Object> queryBento(HttpServletRequest request) throws ParseException {
 		// 返回結果
 		return bentoService.queryBento(request);
 	}
@@ -71,20 +72,5 @@ public class BentoController {
 	public Map<String, Object> editBento(@RequestParam Map<String, Object> param) throws JsonProcessingException {
 		
 		return bentoService.editBento(param);
-	}
-	
-	/** 
-	 * @按條件查詢便當
-	 * @Date 2022/06/08
-	 * @author sharz
-	 * @throws ParseException 
-	 * @throws JsonProcessingException 
-	 * 
-	 */
-	@PutMapping("searchBento")
-	@ResponseBody
-	public Map<String, Object> searchBento(BentoSearchVo param) throws ParseException {
-		// 返回結果
-		return bentoService.searchBento(param);
 	}
 }
